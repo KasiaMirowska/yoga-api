@@ -4,4 +4,4 @@ CREATE TABLE flows_poses (
     author REFERENCEs users(id) ON DELETE CASCADE NOT NULL,
     pose_id REFERENCES yoga_poses(id) ON DELETE SET NULL,
     section_flow_id REFERENCES section_flows(id) ON DELETE CASCADE NOT NULL
-)
+);
