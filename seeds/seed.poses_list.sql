@@ -1,6 +1,6 @@
 BEGIN;
 
-INSERT INTO poses_list (name_eng, alias, name_san, benefits, pose_level, poseType, img, video)
+INSERT INTO poses_list (name_eng, alias, name_san, benefits, pose_level, pose_type, img, video)
 VALUES
 
 ('Fierce Pose', 'Chair', 'Utkatasana', 'Improves balance, mobility, posture, strengthens legs, glutes and ankles, opens chest and shoulders', 'begginer', 'balansing, standing pose', 'https://previews.dropbox.com/p/thumb/AAqU4XrQQG7DYUlbRYGaaWgf4KiJQtRo4GsTaD0D3FfYxtF-TohpmCzbqz7cM60ogj8UQCK3AbhRAQVW_lIkL_HUplis-d641OC4hVM4KHqP8rfRf0B2PTbt7RZZDBcSXUuNedLTkYSOMrgbwiF2xWUV5hBY1Pb8N4nFt4f_6uTFyDc-CzlTFYtraqSexdITlqv0dTGJPIXpLGb8gSu33rTXvl-9m5SYkpIOS5V0yfBjtv0rsO9EWdMkY8MXKekEsFCTkivVZSWydztmnzL-jJP2PHPlduyV6iIWB4X-3gplJ37UZMHWOHFOX_Lq6zCaoOXxyEc6_W2NL9zqhI5ETp_E/p.png?fv_content=true&size_mode=5', "https://www.youtube.com/embed/Kp7XJkG9ubc" ),

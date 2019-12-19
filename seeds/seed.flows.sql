@@ -1,6 +1,6 @@
 BEGIN;
 
-INSERT INTO poses_list (fullname, username, password)
+INSERT INTO users (fullname, username, password)
 VALUES
 ('demo', 'demo', 'password')
 ('Zuza Lukitch', 'zuza@zuza.com', 'zuzapassword'),
