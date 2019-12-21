@@ -10,17 +10,16 @@ const PosesService = {
             'ps.img'
         );
     },
-    getPoseById: (knex, id) {
-        return knex
-            .from('yoga_poses AS ps').select('*')
-            .rightJoin(
-                'flows_poses AS fl_ps',
-                'ps.id',
-                'fl_ps.pose_id',
-            )
-            .leftJoin(
-                'pose_attributes AS psa',
-                'ps'
-            )
+    getPoseById: (knex, id) => {
+        // return knex
+        //     .from('yoga_poses AS ps').select('*')
+        //     .rightJoin(
+        //         'flows_poses AS fl_ps',
+        //         'ps.id',
+        //         'fl_ps.pose_id',
+        //     )
+            
     }
 }
+
+module.exports = PosesService;

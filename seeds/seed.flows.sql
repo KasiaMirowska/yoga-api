@@ -1,11 +1,5 @@
 BEGIN;
 
-INSERT INTO users (fullname, username, password)
-VALUES
-('demo', 'demo', 'password')
-('Zuza Lukitch', 'zuza@zuza.com', 'zuzapassword'),
-('Kate Smith', 'kate@kate.com', 'katepassword'),
-('Libby Adler', 'libby@libby.com', 'libbypassword')
 
 INSERT INTO flows (name, author, peakpose)
 VALUES
@@ -30,7 +24,7 @@ VALUES
 ('relaxing pose'),
 ('releasing pose'),
 ('stabilizing pose'),
-('flexibility building pose')
+('flexcibility building pose')
 
 INSERT INTO flows_poses (main_flow_id, author, pose_id, section_flow_id)
 VALUES

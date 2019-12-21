@@ -5,16 +5,20 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const app = express();
+const posesRouter = require('./poses/poses-router');
+const authRouter = require('./auth/auth-router');
 
 const morganOption = (NODE_ENV === 'production')? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
+app.use(posesRouter);
+app.use(authRouter);
 
 
 app.get('/', (req, res) => {
-    res.send('Hello, boilerplate!')
+    res.send('Hello, from yoga capstone!')
 });
 
 app.use(function errorHandler(error, req, res, next) {
