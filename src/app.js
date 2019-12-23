@@ -7,7 +7,7 @@ const { NODE_ENV } = require('./config');
 const app = express();
 const posesRouter = require('./poses/poses-router');
 const authRouter = require('./auth/auth-router');
-
+const flowsRouter = require('./flows/flows-router');
 const morganOption = (NODE_ENV === 'production')? 'tiny' : 'common';
 
 app.use(morgan(morganOption));
@@ -15,6 +15,7 @@ app.use(helmet());
 app.use(cors());
 app.use(posesRouter);
 app.use(authRouter);
+app.use(flowsRouter);
 
 
 app.get('/', (req, res) => {
