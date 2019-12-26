@@ -14,6 +14,20 @@ const FlowsService = {
             )
          
     },
+    postNewFlow : (db, newFlow) => {
+        return db
+            .insert(newFlow).into('flows').returning('*')
+            .then(rows => rows[0])
+    },
+
+    insertPoseIntoFlows: (knex, flowsPose) => {
+        return knex
+            .insert(flowsPose).into('flows_poses').returning('*')
+            .then(rows => {
+                console.log(rows[0], 'MMMMMMMMMMMMMMM')
+                rows[0]
+            })
+    },
 
     getAllPosesInFlow: (knex, flowId) => {
         return knex
@@ -40,6 +54,7 @@ const FlowsService = {
                 'fl_ps.main_flow_id',
                 flowId
             )
+            
 
     }
 

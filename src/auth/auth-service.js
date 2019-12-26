@@ -4,7 +4,6 @@ const config = require('../config');
 
 const AuthService = {
     getUserWithUserName(knex, username) {
-        
         return knex.from('users')
         .where({username})
         .first()
@@ -17,6 +16,9 @@ const AuthService = {
         return jwt.sign(payload, config.JWT_SECRET, { subject, algorithm: 'HS256'})
     },
 
+    verifyJwt(token) {
+        return jwt.verify(token, config.JWT_SECRET, {algorithms: ['HS256'] }) 
+    },
 
 }
 

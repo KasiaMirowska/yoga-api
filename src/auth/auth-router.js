@@ -28,7 +28,7 @@ authRouter
                         }
                         const subject = dbUser.username;
                         const payload = { user_id: dbUser.id}
-                        console.log({authToken: AuthService.createJwt(subject, payload)})
+                        
                         return res.json({authToken: AuthService.createJwt(subject, payload)})
                     })
             })
