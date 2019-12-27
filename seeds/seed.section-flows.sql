@@ -5,6 +5,7 @@ VALUES
 ('warmUp'),
 ('midFlow'),
 ('breakPoses'),
+('peakPose'),
 ('afterPeak');
 
 COMMIT;

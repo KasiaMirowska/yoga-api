@@ -5,7 +5,6 @@ const FlowsService = {
             .select(
                 'fl.id',
                 'fl.title',
-                'fl.peakpose',
                 'fl.author')
             .join(
                 'users AS usr',
@@ -25,33 +24,33 @@ const FlowsService = {
             .insert(flowsPose).into('flows_poses').returning('*')
             .then(rows => {
                 console.log(rows[0], 'MMMMMMMMMMMMMMM')
-                rows[0]
+                return rows[0]
             })
     },
 
     getAllPosesInFlow: (knex, flowId) => {
         return knex
-            .from('flows_poses AS fl_ps')
+            .from('flows AS fl')
             .select(
-                'fl_ps.main_flow_id',
                 'fl.title',
+                'fl.id',
+                'fl_ps.main_flow_id',
                 'fl_ps.author',
                 'fl_ps.pose_id',
-                'fl.peakpose',
                 'fl_ps.section_flow_id',
                 'sfl.section',
             )
-            .join(
-                'flows AS fl',
+            .leftJoin(
+                'flows_poses AS fl_ps',
                 'fl.id',
                 'fl_ps.main_flow_id')
-            .join(
+            .leftJoin(
                 'section_flows AS sfl',
                 'fl_ps.section_flow_id',
                 'sfl.id'
             )
             .where(
-                'fl_ps.main_flow_id',
+                'fl.id',
                 flowId
             )
             
