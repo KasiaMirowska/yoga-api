@@ -71,6 +71,27 @@ const PosesService = {
             )
             .first()
     },
+
+    insertPoseAttribute: (knex, newAttribute) => {
+        return knex 
+            .insert(newAttribute)
+            .into('pose_attributes')
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
+    },
+
+     insertNote: (knex, newNote) => {
+         return knex
+            .insert(newNote)
+            .into('pose_notes')
+            .returning('*')
+            .then(rows => {
+                return rows[0]
+            })
+     },
+
     getAttributeIdsByPoseId: (knex, poseId) => {
         return knex
             .from('pose_attributes AS ps_at')

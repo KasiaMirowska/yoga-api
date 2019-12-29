@@ -56,18 +56,20 @@ flowsRouter
     })
 
 flowsRouter
-    .route('/api/flow')
+    .route('/api/flow-pose')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
+        
         const knexInstance = req.app.get('db');
         const { main_flow_id, pose_id, section_flow_id } = req.body
+        
         const newFlowsPose = {
             main_flow_id,
             author: req.user.id,
             pose_id,
             section_flow_id
         }
-
+        
         for (const [key, value] of Object.entries(newFlowsPose)) {
             if (value === null) {
                 return res.status(400).send({ error: { message: `Missing ${key}` } });
@@ -76,11 +78,12 @@ flowsRouter
 
         FlowsService.insertPoseIntoFlows(knexInstance, newFlowsPose)
             .then(flowsPose => {
+
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${flowsPose.main_flow_id}`))
                     .json(flowsPose)
-            })
+            }).catch(next)
     })
 
 
@@ -113,11 +116,15 @@ flowsRouter
                     if(pose.pose_id === null){
                         return currentFlow;
                     }
-                    currentFlow.assignedPoses.push(pose.pose_id);
                     currentFlow[pose.section].push(pose.pose_id);
                 });
-
-                res.flow = currentFlow;
+                
+                res.flow = {
+                    id: currentFlow.id,
+                    title: currentFlow.title,
+                    author: currentFlow.author,
+                    assignedPoses: [currentFlow.warmUp, currentFlow.midFlow, currentFlow.peakPose, currentFlow.breakPoses, currentFlow.afterPeak],
+                }
                 next();
             })
             .catch(next)

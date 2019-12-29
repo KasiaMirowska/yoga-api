@@ -1,13 +1,14 @@
 BEGIN;
 
-INSERT INTO pose_attributes (author, assigned_flow_id, pose_id, attribute_id)
+INSERT INTO pose_attributes (author, assigned_flow_id, pose_id, attribute)
 VALUES
-(1, 1, 14, 2),
-(1, 1, 14, 4),
-(1, 1, 14, 5),
-(1, 1, 14, 8), 
-(1, 1, 4, 3),
-(1, 1, 1, 5),
-(1, 1, 1, 6),
-(1, 1, 8, 6);
+(1, 1, 14, 'grounding pose'),
+(1, 1, 14, 'energizing pose'),
+(1, 1, 14, 'strengthening pose'),
+(1, 1, 14, 'strengthening pose'), 
+(1, 1, 4, 'stabilizing pose'),
+(1, 1, 1, 'flexibility building pose'),
+(1, 1, 1, 'energizing pose'),
+(1, 1, 8, 'releasing pose');
 COMMIT;
+

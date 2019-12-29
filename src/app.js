@@ -13,8 +13,8 @@ const morganOption = (NODE_ENV === 'production')? 'tiny' : 'common';
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
-app.use(posesRouter);
 app.use(authRouter);
+app.use(posesRouter);
 app.use(flowsRouter);
 
 

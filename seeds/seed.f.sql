@@ -14,25 +14,12 @@ VALUES
 (2, 1, 8, 2),
 (3, 1, 13, 1);
 
-INSERT INTO attributes_list (attribute) 
+
+INSERT INTO pose_notes (id, assigned_flow_id, pose_id, author, notes)
 VALUES
-('grounding pose'),
-('cooling pose'),
-('heat rising pose'),
-('energizing pose'),
-('strengthening pose'),
-('relaxing pose'),
-('releasing pose'),
-('stabilizing pose'),
-('flexibility building pose');
-
-
-
-INSERT INTO pose_notes (pose_id, author, notes)
-VALUES
-(9, 1, 'I love saturday mornings!'),
-(3, 1, 'A flow a day keeps doctor at bay'),
-(1, 1, 'Never too many squats');
+(1, 1, 9, 1, 'I love saturday mornings!'),
+(2, 1, 3, 1, 'A flow a day keeps doctor at bay'),
+(3, 1, 1, 1, 'Never too many squats');
 
 
 
