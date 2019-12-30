@@ -37,10 +37,42 @@ posesRouter
     });
 
 posesRouter
+    .route('/api/flow/:flow_id/:pose_id')
+    .all(requireAuth)
+    .all((req, res, next) => {
+        const knexInstance = req.app.get('db');
+        const poseId = req.params.pose_id;
+        const flowId = req.params.flow_id;
+
+
+        PosesService.getPoseAttributesById(knexInstance, poseId, flowId)
+            .then(attributes => {
+                let attributesList = [];
+                console.log(attributes)
+                attributes.map(att => attributesList.push(att.attribute))
+                console.log(attributesList)
+
+                attributesNotes = {
+                    attributesList: attributesList,
+                    notes: attributes[0].notes
+                }
+                res.attributes = attributesNotes;
+                console.log(attributesNotes)
+                next()
+            })
+            .catch(next)
+    })
+     .get((req, res, next) => {
+        res.status(200).json(res.attributes);
+    });
+
+
+
+posesRouter
     .route('/api/flow-att/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-        console.log('FIRST CALL?')
+       
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attributes } = req.body;
@@ -49,7 +81,7 @@ posesRouter
                 return res.status(400).send({ error: { message: `Missing ${key}` } });
             }
         }
-    
+
         Promise.all(attributes.map((att, index) => {
             PosesService.insertPoseAttribute(knexInstance, {
                 assigned_flow_id,
@@ -70,8 +102,8 @@ posesRouter
                     .location(path.posix.join(req.originalUrl, `/${saved.pose_id}`))
                     .json(saved);
 
-    })
-    .catch(next)
+            })
+            .catch(next)
 
     })
 

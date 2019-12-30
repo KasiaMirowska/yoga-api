@@ -11,7 +11,7 @@ const PosesService = {
             );
     },
     getPoseById: (knex, poseId) => {
-        return knex 
+        return knex
             .from('yoga_poses AS ps')
             .select(
                 'ps.id',
@@ -32,48 +32,33 @@ const PosesService = {
 
     },
 
-
-    getFlowPoseById: (knex, id) => {
+    getPoseAttributesById: (knex, poseId, flowId) => {
         return knex
-            .from('yoga_poses AS ps')
+            .from('pose_attributes AS ps_att')
             .select(
-                'ps.id',
-                'ps.name_eng',
-                'ps.name_san',
-                'ps.pose_type',
-                'ps.pose_level',
-                'ps.img',
-                'ps.video',
-                'fl_ps.main_flow_id',
-                'fl_ps.author',
-                'fl_ps.section_flow_id',
-                'sfl.section',
+                'ps_att.attribute',
+                'ps_att.pose_id',
+                'ps_att.assigned_flow_id',
+                'ps_att.author',
                 'pn.notes'
             )
-            .join(
-                'flows_poses AS fl_ps',
-                'ps.id',
-                'fl_ps.pose_id',
-            )
-            .join(
-                'section_flows AS sfl',
-                'fl_ps.section_flow_id',
-                'sfl.id'
-            )
+
             .join(
                 'pose_notes AS pn',
-                'ps.id',
+                'ps_att.pose_id',
                 'pn.pose_id'
             )
             .where(
-                'ps.id',
-                id
+                {
+                    'ps_att.assigned_flow_id': flowId,
+                    'ps_att.pose_id': poseId
+                }
             )
-            .first()
+
     },
 
     insertPoseAttribute: (knex, newAttribute) => {
-        return knex 
+        return knex
             .insert(newAttribute)
             .into('pose_attributes')
             .returning('*')
@@ -82,28 +67,28 @@ const PosesService = {
             })
     },
 
-     insertNote: (knex, newNote) => {
-         return knex
+    insertNote: (knex, newNote) => {
+        return knex
             .insert(newNote)
             .into('pose_notes')
             .returning('*')
             .then(rows => {
                 return rows[0]
             })
-     },
+    },
 
     getAttributeIdsByPoseId: (knex, poseId) => {
         return knex
             .from('pose_attributes AS ps_at')
             .select(
                 'ps_at.pose_id',
-                'ps_at.attribute_id',
-                'at_l.attribute',
+                'attribute',
+                'ps_att.assigned_flow_id'
             )
             .join(
-                'attributes_list AS at_l',
-                'at_l.id',
-                'ps_at.attribute_id'
+                'yoga_poses AS ps',
+                'ps.id',
+                'ps_att.pose_id'
             )
             .where(
                 'ps_at.pose_id',
