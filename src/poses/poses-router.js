@@ -44,25 +44,25 @@ posesRouter
         const poseId = req.params.pose_id;
         const flowId = req.params.flow_id;
 
-
         PosesService.getPoseAttributesById(knexInstance, poseId, flowId)
-            .then(attributes => {
-                let attributesList = [];
-                console.log(attributes)
-                attributes.map(att => attributesList.push(att.attribute))
-                console.log(attributesList)
-
-                attributesNotes = {
-                    attributesList: attributesList,
-                    notes: attributes[0].notes
-                }
-                res.attributes = attributesNotes;
-                console.log(attributesNotes)
-                next()
-            })
-            .catch(next)
+        .then(attributes => {
+            
+            let attributesList = {};
+            let notes = {};
+            
+            attributes.forEach(att => attributesList[att.attribute] = true)
+            attributes.forEach(att => notes[att.notes] = true)
+            
+            res.attributes = {
+            attributesList: Object.keys(attributesList),
+            notes: Object.keys(notes)
+            };
+            next()
+        })
+        .catch(next)
     })
-     .get((req, res, next) => {
+
+    .get((req, res, next) => {
         res.status(200).json(res.attributes);
     });
 
@@ -72,7 +72,7 @@ posesRouter
     .route('/api/flow-att/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-       
+
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attributes } = req.body;

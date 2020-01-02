@@ -51,7 +51,7 @@ const PosesService = {
             .where(
                 {
                     'ps_att.assigned_flow_id': flowId,
-                    'ps_att.pose_id': poseId
+                    'ps_att.pose_id': poseId,
                 }
             )
 
