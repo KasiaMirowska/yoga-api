@@ -8,10 +8,16 @@
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
     "migrate:test": "env NODE_ENV=test npm run migrate",
+    "migrate:production": "env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
+    "predeploy": "npm audit && npm run migrate:production",
+    "deploy": "git push heroku master",
     "start": "node src/server.js"
     
   },
   "keywords": [],
+  "engines": {
+    "node": "12.13.0"
+  },
   "author": "kasia",
   "license": "ISC",
   "dependencies": {
