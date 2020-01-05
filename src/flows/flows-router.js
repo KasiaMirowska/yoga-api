@@ -133,7 +133,19 @@ flowsRouter
         res.status(200).json(res.flow)
     })
 
-
+flowsRouter
+.route('/api/delete/:flow_id/:pose_id')
+.all(requireAuth)
+.delete((req,res,next) => {
+    const knexInstance = req.app.get('db');
+    console.log(req.params)
+    const poseToRemove = req.params.pose_id;
+    FlowsService.deletePoseFromFlow(knexInstance, poseToRemove)
+        .then(() => {
+            res.status(204).send('pose deleted from flow')
+        })
+        .catch(next)
+})
 
 
 

@@ -12,7 +12,6 @@
     "predeploy": "npm audit && npm run migrate:production",
     "deploy": "git push heroku master",
     "start": "node src/server.js"
-    
   },
   "keywords": [],
   "engines": {

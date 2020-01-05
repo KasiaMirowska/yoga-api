@@ -12,6 +12,7 @@ posesRouter
         const knexInstance = req.app.get('db')
         PosesService.getAllPoses(knexInstance)
             .then(poses => {
+                console.log(poses, 'POSESSSSSSSSSS')
                 res.json(poses)
             })
     })

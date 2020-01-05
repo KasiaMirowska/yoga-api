@@ -7,8 +7,10 @@ const UsersService = require('./users-service');
 usersRouter
 .route('/api/register')
 .post(jsonBodyParser, (req, res, next) => {
+    console.log(req.body)
     for(const field of ['fullname', 'username', 'password']) {
         if(!req.body[field]) {
+            
             return res.status(400).json({error: {message: `Missing ${field}`}})
         }
     }

@@ -55,6 +55,10 @@ const FlowsService = {
             )
             
 
+    },
+
+    deletePoseFromFlow: (knex, poseId) => {
+        return knex.from('flows_poses').select('*').where({pose_id: poseId}).delete();
     }
 
 }
