@@ -229,18 +229,18 @@ function makeMaliciousPose() {
             benefits: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">', 
             pose_level: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">', 
             pose_type: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">', 
-            img: 'http://placehold.it/500x500', 
+            img: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">', 
             video: 'video1',
     }
+
     const expectedPose = {
-    //   ...maliciousPose,
-      name_eng: '&lt;script&gt;alert(\"xss\");&lt;/script&gt;', 
-            alias: '&lt;script&gt;alert(\"xss\");&lt;/script&gt;', 
-            name_san: '&lt;script&gt;alert(\"xss\");&lt;/script&gt;', 
+            name_eng: '&lt;script&gt;alert("xss");&lt;/script&gt;', 
+            alias: '&lt;script&gt;alert("xss");&lt;/script&gt;', 
+            name_san: '&lt;script&gt;alert("xss");&lt;/script&gt;', 
             benefits: '<img src="https://url.to.file.which/does-not.exist">', 
             pose_level: '<img src="https://url.to.file.which/does-not.exist">', 
             pose_type: '<img src="https://url.to.file.which/does-not.exist">', 
-            img: 'http://placehold.it/500x500', 
+            img: '<img src="https://url.to.file.which/does-not.exist">', 
             video: 'video1',
     }
     return {

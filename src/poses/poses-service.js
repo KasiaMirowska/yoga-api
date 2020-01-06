@@ -16,6 +16,7 @@ const PosesService = {
             .select(
                 'ps.id',
                 'ps.name_eng',
+                'ps.alias',
                 'ps.name_san',
                 'ps.benefits',
                 'ps.pose_type',
