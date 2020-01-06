@@ -4,11 +4,11 @@ const helpers = require('./test-data-helpers');
 const fixtures = require('./test-fixtures');
 const bcrypt = require('bcryptjs');
 
-describe('Poses endpoints', function() {
+describe('Poses endpoints', function () {
     let db;
 
-    const { testPoses, testUsers, testFlows, testAttributes, testNotes, } = helpers.makeTestFixtures();
-    
+    const { testPoses, testUsers, testFlows, testPoseAttributes, testNotes, testAttributes } = helpers.makeTestFixtures();
+
 
     before('make knex instatnce', () => {
         db = knex({
@@ -17,7 +17,7 @@ describe('Poses endpoints', function() {
         })
         app.set('db', db)
     })
-    after('disconnect from db',() => db.destroy());
+    after('disconnect from db', () => db.destroy());
     beforeEach('cleanup', () => fixtures.cleanTables(db));
     afterEach('cleanup', () => fixtures.cleanTables(db));
 
@@ -32,6 +32,7 @@ describe('Poses endpoints', function() {
 
         context('Given poses inside db', () => {
             beforeEach('insert poses', () => {
+              
                 return db
                     .into('yoga_poses')
                     .insert(testPoses)
@@ -40,7 +41,6 @@ describe('Poses endpoints', function() {
                 const expectedPoses = testPoses.map(item => 
                     fixtures.makeExpectedListPose(item)
                 );
-
                 return supertest(app)
                     .get('/api/poses')
                     .expect(200, expectedPoses)
@@ -80,7 +80,7 @@ describe('Poses endpoints', function() {
                 return supertest(app)
                     .get(`/api/flow/${poseId}`)
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                    .expect(404, {error: {message: `Pose with id ${poseId} doesn't exist`}})
+                    .expect(404, { error: { message: `Pose with id ${poseId} doesn't exist` } })
             })
         })
         context('Given poses in DB', () => {
@@ -102,10 +102,10 @@ describe('Poses endpoints', function() {
 
             it('responds with 200 and specified pose', () => {
                 const poseId = 2;
-                const expectedPose = fixtures.makeExpectedFullPose(testPoses[poseId-1]);
+                const expectedPose = fixtures.makeExpectedFullPose(testPoses[poseId - 1]);
                 return supertest(app)
                     .get(`/api/flow/${poseId}`)
-                    .set('Authorization', 
+                    .set('Authorization',
                         fixtures.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedPose)
             })
@@ -148,6 +148,110 @@ describe('Poses endpoints', function() {
         })
     })
 
-    describe()
+    describe('GET /api/flow/:flow_id/:pose_id', () => {
+        context('Given no poses in db', () => {
+            console.log(db, 'DATABASE!!!!')
+            beforeEach(fixtures.seedUsers(db, testUsers));
+            it('responds 404', () => {
+                const poseId = 2;
+                const flowId = 1;
+                return supertest(app)
+                    .get(`/api/flow/${flowId}/${poseId}`)
+                    .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
+                    .expect(404, { error: { message: `Pose with id ${poseId} doesn't exist` } })
+            })
+        })
+        context('given poses in db but no attributes or no notes', () => {
+            beforeEach(fixtures.seedPosesForLoggedIn(db, testUsers, testPoses));
+            it('responds 200 and returns slected pose without attributes or notes', () => {
+                const poseId = 2;
+                const flowId = 2;
+                const expectedPose = fixtures.makeExpectedFullPose(testPoses[poseId - 1]);
+                return supertest(app)
+                    .get(`/api/flow/${flowId}/${poseId}`)
+                    .set('Authorization',
+                        fixtures.makeAuthHeader(testUsers[0]))
+                    .expect(200, expectedPose)
+            })
+        })
+        context('given pose has attributes but no notes', () => {
+            beforeEach(fixtures.seedPosesAttributes(db, testUsers, testPoses, testPoseAttributes));
+            it('responds 200 returning pose with attributes', () => {
+                const poseId = 2;
+                const flowId = 2;
+                const expectedPoseAttributes = fixtures.makeExpectedPoseAttributes(db, testUsers[0], testPoses[poseId - 1], flowId, testPoseAttributes);
+                return supertest(app)
+                    .get(`/api/flow/${flowId}/${poseId}`)
+                    .set('Authorization',
+                        fixtures.makeAuthHeader(testUsers[0]))
+                    .expect(200, expectedPoseAttributes)
+            })
+        })
+        context('given pose has notes but no attributes', () => {
+            beforeEach(fixtures.seedPosesNotes(db, testUsers, testPoses, testNotes));
+            it('responds 200 returning pose with notes', () => {
+                const poseId = 2;
+                const flowId = 2;
+                const expectedPoseNotes = fixtures.makeExpectedPoseNotes(db, testUsers[0], testPoses[poseId - 1], flowId, testNotes);
+                return supertest(app)
+                    .get(`/api/flow/${flowId}/${poseId}`)
+                    .set('Authorization',
+                        fixtures.makeAuthHeader(testUsers[0]))
+                    .expect(200, expectedPoseNotes)
+            })
+        })
+        context('given pose has attributes and notes', () => {
+            beforeEach(fixtures.seedPosesAttNotes(db, testUsers, testPoses, testPoseAttributes, testNotes));
+            it('responds 200 returning pose with notes', () => {
+                const poseId = 2;
+                const flowId = 2;
+                const expectedPoseAttNotes = fixtures.makeExpectedPoseAttNotes(db, testUsers[0], testPoses[poseId - 1], flowId, testPoseAttributes, testNotes);
+                return supertest(app)
+                    .get(`/api/flow/${flowId}/${poseId}`)
+                    .set('Authorization',
+                        fixtures.makeAuthHeader(testUsers[0]))
+                    .expect(200, expectedPoseAttNotes)
 
-})
+            })
+        })
+    })
+
+    describe.only('POST /api/flow/flow-att/:pose_id', () => {
+        const testPose = testPoses[0];
+        const testUser = testusers[0];
+        const testFlow = testFlows[0];
+        const testAttribute = testAttributes[0];
+        const newAttributeObject = {
+            assigned_flow_id: testFlow,
+            author: testuser,
+            pose_id: testPose,
+            attribute: testAttribute
+        }
+        return supertest(app)
+            .post(`/api/flow/flow-att/${testPose}`)
+            .set('Authorization', helpers.makeAuthHeader(testUser))
+            .send(newAttributeObject)
+            .expect(201)
+            .expect(res => {
+                expect(res.body).to.have.property('id')
+                expect(res.body.assigned_flow_id).to.eql(newAttributeObject.assigned_flow_id)
+                expect(res.body.author).to.eql(newAttributeObject.author)
+                expect(res.body.pose_id).to.eql(newAttributeObject.pose_id)
+                expect(res.body.attribute).to.eql(newAttributeObject.attribute)
+                expect(res.headers.location).to.eql(`/api/flow/flow-att/${res.body.id}`)
+            })
+            .expect(res =>
+                db
+                    .from('pose-attributes')
+                    .select('*')
+                    .where({ id: res.body.id })
+                    .first()
+                    .then(row => {
+                        expect(row.assigned_flow_id).to.eql(newAttributeObject.assigned_flow_id)
+                        expect(row.author).to.eql(newAttributeObject.author)
+                        expect(row.pose_id).to.eql(newAttributeObject.pose_id)
+                        expect(row.attribute).to.eql(newAttributeObject.attribute)
+                    })
+            )
+        })
+ })

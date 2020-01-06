@@ -60,9 +60,8 @@ posesRouter
         const poseId = req.params.pose_id;
         const flowId = req.params.flow_id;
 
-        PosesService.getPoseAttributesById(knexInstance, poseId, flowId)
+        PosesService.getPoseAttNotesById(knexInstance, poseId, flowId)
         .then(attributes => {
-            
             let attributesList = {};
             let notes = {};
             

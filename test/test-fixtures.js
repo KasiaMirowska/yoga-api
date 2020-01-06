@@ -42,7 +42,7 @@ function seedPosesForLoggedIn(db, users, poses) {
     return db
         .into('users')
         .insert(protectedUsers)
-        .then(() => 
+        .then(() =>
             db
                 .into('yoga_poses')
                 .insert(poses)
@@ -50,6 +50,72 @@ function seedPosesForLoggedIn(db, users, poses) {
         .then(() => {
             console.log('poses for loggedin user populated')
         })
+}
+function seedPosesAttributes(db, users, poses, attributes) {
+
+    const protectedUsers = seedUsers(users);
+    return db
+        .into('users')
+        .insert(protectedUsers)
+        .then(() =>
+            db
+                .into('yoga_poses')
+                .insert(poses)
+                .then(() => {
+                    db
+                        .into('pose_attributes')
+                        .insert(attributes)
+                        .then(() => {
+                            console.log('attributes populated')
+                        })
+                })
+        )
+}
+
+function seedPosesNotes(db, users, poses, notes) {
+    const protectedUsers = seedUsers(users);
+    return db
+        .into('users')
+        .insert(protectedUsers)
+        .then(() =>
+            db
+                .into('yoga_poses')
+                .insert(poses)
+                .then(() => {
+                    db
+                        .into('pose_notes')
+                        .insert(notes)
+                        .then(() => {
+                            console.log('notes populated')
+                        })
+                })
+        )
+}
+
+function seedPosesAttNotes(db, users, poses, attributes, notes) {
+    const protectedUsers = seedUsers(users);
+    return db
+        .into('users')
+        .insert(protectedUsers)
+        .then(() =>
+            db
+                .into('yoga_poses')
+                .insert(poses)
+                .then(() => {
+                    db
+                        .into('pose_attributes')
+                        .insert(attributes)
+                        .then(() => {
+                            db
+                                .into('pose_notes')
+                                .insert(notes)
+                                .then(() => {
+                                    console.log('pose attNotes populated')
+                                })
+                        })
+                })
+        )
+
 }
 
 
@@ -59,6 +125,7 @@ function makeExpectedListPose(pose) {
         name_eng: pose.name_eng,
         alias: pose.alias,
         name_san: pose.name_san,
+        benefits: '',
         pose_type: pose.pose_type,
         pose_level: pose.pose_level,
         img: pose.img
@@ -78,8 +145,59 @@ function makeExpectedFullPose(pose) {
     })
 }
 
-function makeAuthHeader(user, secret=process.env.JWT_SECRET) {
-    const token = jwt.sign({user_id: user.id}, secret, {
+function makeExpectedPoseAttributes(user, pose, flowId, attributes) {
+    const poseAttributes = attributes.filter(att => att.author !== user)
+    poseAttributes.filter(att => att.assigned_flow_id !== flowId);
+    poseAttributes.filter(att => att.pose_id !== pose.id)
+    let attributesList = {};
+    attributesList = poseAttributes.forEach(att => attributesList[att.attribute] = true)
+
+    return ({
+        id: pose.id,
+        name_eng: pose.name_eng,
+        alias: pose.alias,
+        name_san: pose.name_san,
+        benefits: pose.benefits,
+        pose_type: pose.pose_type,
+        pose_level: pose.pose_level,
+        img: pose.img,
+        video: pose.video,
+        attributesList: Object.keys(attributesList)
+    })
+}
+
+function makeExpectedPoseNotes(user, pose, flowId, notes) {
+    const poseNotes = notes.filter(n => n.author !== user)
+    poseNotes.filter(n => n.assigned_flow_id !== flowId);
+    poseNotes.filter(n => n.pose_id !== pose.id)
+    let notesList = {};
+    notesList = poseNotes.forEach(n => notesList[n.notes] = true)
+
+    return ({
+        id: pose.id,
+        name_eng: pose.name_eng,
+        alias: pose.alias,
+        name_san: pose.name_san,
+        benefits: pose.benefits,
+        pose_type: pose.pose_type,
+        pose_level: pose.pose_level,
+        img: pose.img,
+        video: pose.video,
+        notesList: Object.keys(notesList)
+    })
+}
+
+function makeExpectedPoseAttNotes(user, pose, flowId, attributes, notes) {
+    const poseAtt = makeExpectedPoseAttributes(user, pose, flowId, attributes)
+    const poseNote = makeExpectedPoseNotes(user, pose, flowId, notes)
+    return ({
+        ...poseAtt,
+        noteList: poseNote.noteList,
+    })
+}
+
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+    const token = jwt.sign({ user_id: user.id }, secret, {
         subject: user.username,
         algorithm: 'HS256'
     })
@@ -89,8 +207,13 @@ function makeAuthHeader(user, secret=process.env.JWT_SECRET) {
 module.exports = {
     makeExpectedListPose,
     makeExpectedFullPose,
-    cleanTables,  
+    makeExpectedPoseAttributes,
+    makeExpectedPoseNotes,
+    makeExpectedPoseAttNotes,
+    cleanTables,
     seedUsers,
-    //seedPosesForLoggedIn,
+    seedPosesForLoggedIn,
+    seedPosesAttributes,
+    seedPosesNotes,
     makeAuthHeader,
 }

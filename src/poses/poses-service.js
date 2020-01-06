@@ -4,6 +4,7 @@ const PosesService = {
             .from('yoga_poses AS ps').select(
                 'ps.id',
                 'ps.name_eng',
+                'ps.alias',
                 'ps.name_san',
                 'ps.pose_type',
                 'ps.pose_level',
@@ -33,7 +34,7 @@ const PosesService = {
 
     },
 
-    getPoseAttributesById: (knex, poseId, flowId) => {
+    getPoseAttNotesById: (knex, poseId, flowId) => {
         return knex
             .from('pose_attributes AS ps_att')
             .select(
@@ -78,24 +79,24 @@ const PosesService = {
             })
     },
 
-    getAttributeIdsByPoseId: (knex, poseId) => {
-        return knex
-            .from('pose_attributes AS ps_at')
-            .select(
-                'ps_at.pose_id',
-                'attribute',
-                'ps_att.assigned_flow_id'
-            )
-            .join(
-                'yoga_poses AS ps',
-                'ps.id',
-                'ps_att.pose_id'
-            )
-            .where(
-                'ps_at.pose_id',
-                poseId
-            )
-    }
+    // getAttributeIdsByPoseId: (knex, poseId) => {
+    //     return knex
+    //         .from('pose_attributes AS ps_at')
+    //         .select(
+    //             'ps_at.pose_id',
+    //             'attribute',
+    //             'ps_att.assigned_flow_id'
+    //         )
+    //         .join(
+    //             'yoga_poses AS ps',
+    //             'ps.id',
+    //             'ps_att.pose_id'
+    //         )
+    //         .where(
+    //             'ps_at.pose_id',
+    //             poseId
+    //         )
+    // }
 
 }
 

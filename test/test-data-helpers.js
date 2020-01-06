@@ -175,8 +175,24 @@ function makeNotesArray(flows,poses,users) {
         }
     ]
 }
+function makeAttributesArray () {
+    [
+        {
+            id: 1,
+            attribute: 'yoga attribute 1'
+        },
+        {
+            id: 2,
+            attribute: 'yoga attribute 2'
+        },
+        {
+            id: 3,
+            attribute: 'yoga attribute 3'
+        }
+    ]
+}
 
-function makeAttributesArray(users, flows, poses) {
+function makePoseAttributesArray(users, flows, poses) {
 [
     {
         id: 1,
@@ -212,12 +228,13 @@ function makeAttributesArray(users, flows, poses) {
 function makeTestFixtures() {
     const testPoses = makePosesArray();
     const testUsers = makeUsersArray();
+    const testAttributes = makeAttributesArray()
     const testFlows = makeFlowsArray(testUsers);
     const testSectionFlows = makeSectionFlowsArray();
     const testFlowsPoses = makeFlowsPosesArray(testFlows, testUsers, testPoses, testSectionFlows);
     const testNotes = makeNotesArray(testFlows,testPoses,testUsers);
-    const testAttributes = makeAttributesArray(testUsers, testFlows, testPoses);
-    return {testPoses, testUsers, testFlows,testSectionFlows, testFlowsPoses, testNotes, testAttributes}
+    const testPoseAttributes = makePoseAttributesArray(testUsers, testFlows, testPoses);
+    return {testPoses, testUsers, testFlows,testSectionFlows, testFlowsPoses, testNotes, testAttributes, testPoseAttributes}
 }
 
 function makeMaliciousPose() {
@@ -257,6 +274,7 @@ function makeMaliciousPose() {
     makeFlowsPosesArray,
     makeNotesArray,
     makeAttributesArray,
+    makePoseAttributesArray,
     makeTestFixtures,
     makeMaliciousPose,
     makeTestFixtures,
