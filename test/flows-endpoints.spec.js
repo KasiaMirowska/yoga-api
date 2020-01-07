@@ -21,7 +21,7 @@ describe('Flows endpoints', function () {
     beforeEach('cleanup', () => fixtures.cleanTables(db));
     afterEach('cleanup', () => fixtures.cleanTables(db));
 
-    describe.only('GET /api/flows', () => {
+    describe('GET /api/flows', () => {
         context('Given no flows in db', () => {
             beforeEach('insert users', () => {
                 const users = testUsers.map(user => ({
@@ -62,6 +62,11 @@ describe('Flows endpoints', function () {
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
                     .expect(200, expectedFlows)
             })
+        })
+    })
+    describe('POST /api/flows', () => {
+        it('creates a new user flow', () => {
+
         })
     })
 })

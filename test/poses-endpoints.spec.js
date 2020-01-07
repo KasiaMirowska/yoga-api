@@ -243,10 +243,19 @@ describe('Poses endpoints', function () {
     })
 
     describe('POST /api/flowatt/:pose_id', () => {
+        beforeEach('inserts users', () => {
+            const users = testUsers.map(user => ({
+                ...user,
+                password: bcrypt.hashSync(user.password, 1)
+            }))
+            return db
+            .into('users')
+            .insert(users)
+        })
         it('creates a new attribute object', () => {
-            const testPose = testPoses[0].id;
+            const testPose = testPoses[1].id;
             const testUser = testUsers[0].id;
-            const testFlow = testFlows[0].id;
+            const testFlow = testFlows[1].id;
             const testAttributes = testPoseAttributes[0].attribute;
             const newAttributesReq = {
                 assigned_flow_id: testFlow,
@@ -254,16 +263,17 @@ describe('Poses endpoints', function () {
                 pose_id: testPose,
                 attributes: [testAttributes, testAttributes] //client sends an array of vaious attributes
             }
+            console.log(newAttributesReq, "OBJECT")
             return supertest(app)
                 .post(`/api/flowatt/${testPose}`)
                 .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
                 .send(newAttributesReq)
                 .expect(201)
                 .expect(res => {
-                    expect(res.body.assigned_flow_id).to.eql(newAttributeReq.assigned_flow_id)
-                    expect(res.body.author).to.eql(newAttributeReq.author)
-                    expect(res.body.pose_id).to.eql(newAttributeReq.pose_id)
-                    expect(res.body.attribute).to.eql(newAttributeReq.attribute)
+                    expect(res.body.assigned_flow_id).to.eql(newAttributesReq.assigned_flow_id)
+                    expect(res.body.author).to.eql(newAttributesReq.author)
+                    expect(res.body.pose_id).to.eql(newAttributesReq.pose_id)
+                    expect(res.body.attribute).to.eql(newAttributesReq.attribute)
                     expect(res.headers.location).to.eql(`/api/flowatt/${res.body.assigned_flow_id}/${res.body.pose_id}`)
                 })
                 .expect(res =>
@@ -284,6 +294,15 @@ describe('Poses endpoints', function () {
     })
 
     describe('POST /api/flownote/pose_id', () => {
+        beforeEach('inserts users', () => {
+            const users = testUsers.map(user => ({
+                ...user,
+                password: bcrypt.hashSync(user.password, 1)
+            }))
+            return db
+            .into('users')
+            .insert(users)
+        })
         it('inserts new note to db', () => {
             const user = testUsers[0].id;
             const flow = testFlows[1].id;
