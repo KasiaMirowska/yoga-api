@@ -9,8 +9,8 @@ const xss = require('xss');
 const serializePose = (pose) => {
     return ({
         id: pose.id,
-        name_eng: xss(pose.name_eng), 
-        alias: xss(pose.alias), 
+        name_eng: xss(pose.name_eng),
+        alias: xss(pose.alias),
         name_san: xss(pose.name_san),
         benefits: xss(pose.benefits),
         pose_level: xss(pose.pose_level),
@@ -20,13 +20,28 @@ const serializePose = (pose) => {
     })
 }
 
+const serializeAttPose = (pose) => {
+    return ({
+        id: pose.id,
+        name_eng: xss(pose.name_eng),
+        alias: xss(pose.alias),
+        name_san: xss(pose.name_san),
+        benefits: xss(pose.benefits),
+        pose_level: xss(pose.pose_level),
+        pose_type: xss(pose.pose_type),
+        img: xss(pose.img),
+        video: pose.video,
+        attributesList: pose.attributesList.map(att => xss(att)),
+        notes: pose.notes.map(note => xss(note)),
+    })
+}
+
 posesRouter
     .route('/api/poses')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         PosesService.getAllPoses(knexInstance)
             .then(poses => {
-                console.log(poses, 'HERHERHERHE')
                 res.status(200).json(poses.map(serializePose))
             })
     })
@@ -39,7 +54,6 @@ posesRouter
         const poseId = req.params.pose_id;
         PosesService.getPoseById(knexInstance, poseId)
             .then(pose => {
-                console.log(pose, 'HERE??????????????')
                 if (!pose) {
                     return res.status(404).send({ error: { message: `Pose with id ${poseId} doesn't exist` } })
                 }
@@ -57,40 +71,54 @@ posesRouter
     .all(requireAuth)
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
-        const poseId = req.params.pose_id;
-        const flowId = req.params.flow_id;
+        const poseId = Number(req.params.pose_id);
+        const flowId = Number(req.params.flow_id);
+        PosesService.getPoseById(knexInstance, poseId)
+            .then(pose => {
+                if (!pose) {
+                    return res.status(404).send({ error: { message: `Pose with id ${poseId} doesn't exist` } })
+                }
+                res.pose = pose;
 
-        PosesService.getPoseAttNotesById(knexInstance, poseId, flowId)
-        .then(attributes => {
-            let attributesList = {};
-            let notes = {};
-            
-            attributes.forEach(att => attributesList[att.attribute] = true)
-            attributes.forEach(att => notes[att.notes] = true)
-            
-            res.attributes = {
-            attributesList: Object.keys(attributesList),
-            notes: Object.keys(notes)
-            };
-            next()
-        })
-        .catch(next)
+                PosesService.getPoseAttNotesById(knexInstance, poseId, flowId)
+                    .then(attributes => {
+                        if (!attributes[0]) {
+                            res.status(200).json(serializePose(res.pose));
+                        } else {
+                            let attributesList = {};
+                            let notes = {};
+
+                            attributes.forEach(att => attributesList[att.attribute] = true)
+                            attributes.forEach(att => notes[att.notes] = true)
+
+                            res.poseAttributes = {
+                                ...res.pose,
+                                attributesList: Object.keys(attributesList),
+                                notes: Object.keys(notes)
+                            };
+
+                            next()
+                        }
+                        next()
+                    })
+                    .catch(next)
+            })
     })
-
     .get((req, res, next) => {
-        res.status(200).json(res.attributes);
+        res.status(200).json(serializeAttPose(res.poseAttributes));
     });
 
 
-
+   
 posesRouter
     .route('/api/flow-att/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-
+        console.log('HERE?????????????')
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attributes } = req.body;
+        console.log(req.body, 'BODY')
         for (const [key, value] of Object.entries(req.body)) {
             if (value === null) {
                 return res.status(400).send({ error: { message: `Missing ${key}` } });
@@ -98,6 +126,7 @@ posesRouter
         }
 
         Promise.all(attributes.map((att, index) => {
+            console.log('HERE?????????????', att)
             PosesService.insertPoseAttribute(knexInstance, {
                 assigned_flow_id,
                 author: author,

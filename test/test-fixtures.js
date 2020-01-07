@@ -29,6 +29,7 @@ function seedUsers(db, users) {
         ...user,
         password: bcrypt.hashSync(user.password, 1)
     }));
+    console.log(db, 'DATABASE!!!!2222222222222')
     return db
         .into('users')
         .insert(preppedUsers)
@@ -146,12 +147,11 @@ function makeExpectedFullPose(pose) {
 }
 
 function makeExpectedPoseAttributes(user, pose, flowId, attributes) {
-    const poseAttributes = attributes.filter(att => att.author !== user)
-    poseAttributes.filter(att => att.assigned_flow_id !== flowId);
-    poseAttributes.filter(att => att.pose_id !== pose.id)
+    const poseAttributes = attributes.filter(att => att.author === user.id)
+    const newerPoseAttributes = poseAttributes.filter(att => att.assigned_flow_id === flowId);
+    const newestPoseAttributes = newerPoseAttributes.filter(att => att.pose_id === pose.id)
     let attributesList = {};
-    attributesList = poseAttributes.forEach(att => attributesList[att.attribute] = true)
-
+    newestPoseAttributes.forEach(att => attributesList[att.attribute] = true)
     return ({
         id: pose.id,
         name_eng: pose.name_eng,
@@ -162,16 +162,16 @@ function makeExpectedPoseAttributes(user, pose, flowId, attributes) {
         pose_level: pose.pose_level,
         img: pose.img,
         video: pose.video,
-        attributesList: Object.keys(attributesList)
+        attributesList: Object.keys(attributesList),
     })
 }
 
 function makeExpectedPoseNotes(user, pose, flowId, notes) {
-    const poseNotes = notes.filter(n => n.author !== user)
-    poseNotes.filter(n => n.assigned_flow_id !== flowId);
-    poseNotes.filter(n => n.pose_id !== pose.id)
+    const poseNotes = notes.filter(n => n.author === user.id)
+    const newerPoseNotes = poseNotes.filter(n => n.assigned_flow_id === flowId);
+    const newestPoseNotes = newerPoseNotes.filter(n => n.pose_id === pose.id)
     let notesList = {};
-    notesList = poseNotes.forEach(n => notesList[n.notes] = true)
+    newestPoseNotes.forEach(n =>notesList[n.notes] = true)
 
     return ({
         id: pose.id,
@@ -183,7 +183,7 @@ function makeExpectedPoseNotes(user, pose, flowId, notes) {
         pose_level: pose.pose_level,
         img: pose.img,
         video: pose.video,
-        notesList: Object.keys(notesList)
+        notes: Object.keys(notesList)
     })
 }
 
@@ -192,7 +192,7 @@ function makeExpectedPoseAttNotes(user, pose, flowId, attributes, notes) {
     const poseNote = makeExpectedPoseNotes(user, pose, flowId, notes)
     return ({
         ...poseAtt,
-        noteList: poseNote.noteList,
+        notes: poseNote.notes,
     })
 }
 
@@ -201,6 +201,7 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
         subject: user.username,
         algorithm: 'HS256'
     })
+    console.log('HERE?????????????1111',token)
     return `Bearer ${token}`
 }
 
@@ -211,9 +212,9 @@ module.exports = {
     makeExpectedPoseNotes,
     makeExpectedPoseAttNotes,
     cleanTables,
-    seedUsers,
-    seedPosesForLoggedIn,
-    seedPosesAttributes,
-    seedPosesNotes,
+    // seedUsers,
+    // seedPosesForLoggedIn,
+    // seedPosesAttributes,
+    // seedPosesNotes,
     makeAuthHeader,
 }
