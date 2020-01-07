@@ -203,7 +203,7 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     })
     console.log('HERE?????????????1111',token)
     return `Bearer ${token}`
-}
+}  
 
 module.exports = {
     makeExpectedListPose,

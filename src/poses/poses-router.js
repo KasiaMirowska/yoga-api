@@ -111,10 +111,10 @@ posesRouter
 
    
 posesRouter
-    .route('/api/flow-att/:pose_id')
+    .route('/api/flowatt/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-        console.log('HERE?????????????')
+        console.log('HERE?????????????222222222')
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attributes } = req.body;
@@ -126,7 +126,7 @@ posesRouter
         }
 
         Promise.all(attributes.map((att, index) => {
-            console.log('HERE?????????????', att)
+            console.log('HERE?????????????33333333', att)
             PosesService.insertPoseAttribute(knexInstance, {
                 assigned_flow_id,
                 author: author,
@@ -152,9 +152,10 @@ posesRouter
     })
 
 posesRouter
-    .route(('/api/flow-note/:pose_id'))
+    .route(('/api/flownote/:pose_id'))
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
+        console.log('HERE?????????????444444444444', note)
         const knexInstance = req.app.get('db');
         const { assigned_flow_id, pose_id, notes } = req.body;
         const author = req.user.id;

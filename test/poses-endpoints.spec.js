@@ -242,7 +242,7 @@ describe('Poses endpoints', function () {
         })
     })
 
-    describe('POST /api/flow-att/:pose_id', () => {
+    describe('POST /api/flowatt/:pose_id', () => {
         it('creates a new attribute object', () => {
             const testPose = testPoses[0].id;
             const testUser = testUsers[0].id;
@@ -255,7 +255,7 @@ describe('Poses endpoints', function () {
                 attributes: [testAttributes, testAttributes] //client sends an array of vaious attributes
             }
             return supertest(app)
-                .post(`/api/flow-att/${testPose}`)
+                .post(`/api/flowatt/${testPose}`)
                 .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
                 .send(newAttributesReq)
                 .expect(201)
@@ -264,7 +264,7 @@ describe('Poses endpoints', function () {
                     expect(res.body.author).to.eql(newAttributeReq.author)
                     expect(res.body.pose_id).to.eql(newAttributeReq.pose_id)
                     expect(res.body.attribute).to.eql(newAttributeReq.attribute)
-                    expect(res.headers.location).to.eql(`/api/flow-att/${res.body.assigned_flow_id}/${res.body.pose_id}`)
+                    expect(res.headers.location).to.eql(`/api/flowatt/${res.body.assigned_flow_id}/${res.body.pose_id}`)
                 })
                 .expect(res =>
                     db
@@ -283,7 +283,7 @@ describe('Poses endpoints', function () {
 
     })
 
-    describe('POST /api/flow-note/pose_id', () => {
+    describe('POST /api/flownote/pose_id', () => {
         it('inserts new note to db', () => {
             const user = testUsers[0].id;
             const flow = testFlows[1].id;
@@ -298,7 +298,7 @@ describe('Poses endpoints', function () {
             }
 
             return supertest(app)
-                .post(`/api/flow-note/${poseId}`)
+                .post(`/api/flownote/${poseId}`)
                 .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
                 .send(newNoteRequest)
                 .expect(201)
@@ -308,7 +308,7 @@ describe('Poses endpoints', function () {
                     expect(res.body.author).to.eql(newNoteReq.author)
                     expect(res.body.pose_id).to.eql(newNoteReq.pose_id)
                     expect(res.body.notes).to.eql(newNoteReq.notes)
-                    expect(res.headers.location).to.eql(`/api/flow-att/${res.body.id}`)
+                    expect(res.headers.location).to.eql(`/api/flownote/${res.body.id}`)
                 })
                 .expect(res => {
                     return db
