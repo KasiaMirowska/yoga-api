@@ -171,7 +171,7 @@ function makeExpectedPoseNotes(user, pose, flowId, notes) {
     const newerPoseNotes = poseNotes.filter(n => n.assigned_flow_id === flowId);
     const newestPoseNotes = newerPoseNotes.filter(n => n.pose_id === pose.id)
     let notesList = {};
-    newestPoseNotes.forEach(n =>notesList[n.notes] = true)
+    newestPoseNotes.forEach(n => notesList[n.notes] = true)
 
     return ({
         id: pose.id,
@@ -196,14 +196,15 @@ function makeExpectedPoseAttNotes(user, pose, flowId, attributes, notes) {
     })
 }
 
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ user_id: user.id }, secret, {
         subject: user.username,
         algorithm: 'HS256'
     })
-    console.log('HERE?????????????1111',token)
+    console.log('HERE?????????????1111', token)
     return `Bearer ${token}`
-}  
+}
 
 module.exports = {
     makeExpectedListPose,

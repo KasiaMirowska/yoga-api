@@ -95,10 +95,10 @@ flowsRouter
     .all(requireAuth)
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
-        const flowId = req.params.flow_id;
+        const flowId = Number(req.params.flow_id);
         FlowsService.getAllPosesInFlow(knexInstance, flowId)
             .then(flow => {
-                if (!flow) {
+                if (!flow[0]) {
                     return res.status(400).send({ error: { message: `Flow with id ${flowId} doesn't exist` } })
                 }
                
@@ -113,11 +113,12 @@ flowsRouter
                     breakPoses: [],
                     afterPeak: [],
                 };
-                flow.map(pose => {
-                    if(pose.pose_id === null){
+                flow.map(flow => {
+                    
+                    if(flow.pose_id === null){
                         return currentFlow;
                     }
-                    currentFlow[pose.section].push(pose.pose_id);
+                    currentFlow[flow.section].push(flow.pose_id);
                 });
                 
                 res.flow = {
@@ -139,9 +140,10 @@ flowsRouter
 .all(requireAuth)
 .delete((req,res,next) => {
     const knexInstance = req.app.get('db');
-    console.log(req.params)
+    console.log(req.params, 'PRAMSMMMMMMM')
     const poseToRemove = req.params.pose_id;
-    FlowsService.deletePoseFromFlow(knexInstance, poseToRemove)
+    const flowToTarget = req.params.flow_id;
+    FlowsService.deletePoseFromFlow(knexInstance, poseToRemove, flowToTarget)
         .then(() => {
             res.status(204).send('pose deleted from flow')
         })

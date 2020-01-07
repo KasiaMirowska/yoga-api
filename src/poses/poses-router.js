@@ -114,7 +114,7 @@ posesRouter
     .route('/api/flowatt/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-        console.log('HERE?????????????222222222')
+        console.log('GETTING HERE???????')
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attributes } = req.body;
@@ -126,7 +126,6 @@ posesRouter
         }
 
         Promise.all(attributes.map((att, index) => {
-            console.log('HERE?????????????33333333', att)
             PosesService.insertPoseAttribute(knexInstance, {
                 assigned_flow_id,
                 author: author,
@@ -155,12 +154,11 @@ posesRouter
     .route(('/api/flownote/:pose_id'))
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-        console.log('HERE?????????????444444444444', note)
         const knexInstance = req.app.get('db');
         const { assigned_flow_id, pose_id, notes } = req.body;
         const author = req.user.id;
         const newNote = { assigned_flow_id, pose_id, author, notes };
-        console.log(newNote, 'NEWNOTE')
+       
         for (const [key, value] in Object.entries(newNote)) {
             if (value === null) {
                 return res.status(400).send({ error: { message: `Missing ${key}` } })
@@ -168,7 +166,7 @@ posesRouter
         }
         PosesService.insertNote(knexInstance, newNote)
             .then(note => {
-                console.log(path.posix.join(req.originalUrl, `/${note.id}`))
+                console.log(path.posix.join(req.originalUrl, `/${note.id}`), "ORIGINAL ORIGINAL")
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${note.id}`))

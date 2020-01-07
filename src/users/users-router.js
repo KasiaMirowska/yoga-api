@@ -2,7 +2,7 @@ const express = require('express');
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 const UsersService = require('./users-service');
-
+const path = require('path');
 
 usersRouter
 .route('/api/register')
@@ -10,7 +10,6 @@ usersRouter
     console.log(req.body)
     for(const field of ['fullname', 'username', 'password']) {
         if(!req.body[field]) {
-            
             return res.status(400).json({error: {message: `Missing ${field}`}})
         }
     }
@@ -36,9 +35,10 @@ usersRouter
                     }
                     return UsersService.insertUser(knexInstance, newUser)
                     .then(user => {
+                        console.log(user, 'USER!!!!!!')
                         return res
                             .status(201)
-                            .location(path.posix.join(req.originalUrl, `/$user.id`))
+                            .location(path.posix.join(req.originalUrl, `/${user.id}`))
                             .json(user)
                     })
                 })

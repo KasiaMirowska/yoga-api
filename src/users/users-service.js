@@ -27,10 +27,8 @@ const UsersService = {
     },
 
     insertUser: (knex, newUser) => {
-        return knex.insert(newUser).into('users').returning('*').then(rows => {
-            console.log(rows[0], 'new user created!!!!!!!')
-            return rows[0];
-        })
+        return knex.insert(newUser).into('users').returning('*')
+        .then(([user]) => user)
     }
     
 }

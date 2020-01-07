@@ -97,22 +97,26 @@ function makeSectionFlowsArray() {
     return [
         {
             id: 1,
-            section: 'section1',
+            section: 'warmUp',
         },
 
         {
             id: 2,
-            section: 'section2',
+            section: 'midFlow',
         },
 
         {
             id: 3,
-            section: 'section3',
+            section: 'peakPose',
         },
 
         {
             id: 4,
-            section: 'section4',
+            section: 'breakPoses',
+        },
+        {
+            id: 5,
+            section: 'afterBreak',
         }
     ]
 }
@@ -120,23 +124,26 @@ function makeSectionFlowsArray() {
 function makeFlowsPosesArray(flows, users, poses, sectionFlows) {
     return [
         {
-            id: 1,
             main_flow_id: 1,
             author: 1,
             pose_id: 1,
             section_flow_id: 1,
         },
         {
-            id: 2,
             main_flow_id: 1,
             author: 1,
             pose_id: 2,
             section_flow_id: 1,
         },
         {
-            id: 3,
             main_flow_id: 3,
             author: 1,
+            pose_id: 1,
+            section_flow_id: 2,
+        },
+        {
+            main_flow_id: 1,
+            author: 2,
             pose_id: 1,
             section_flow_id: 2,
         }
