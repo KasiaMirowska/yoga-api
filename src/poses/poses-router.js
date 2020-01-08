@@ -114,10 +114,9 @@ posesRouter
     .route('/api/flowatt/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
-        console.log('GETTING HERE???????')
         const knexInstance = req.app.get('db');
         const author = req.user.id;
-        const { assigned_flow_id, pose_id, attributes } = req.body;
+        const { assigned_flow_id, pose_id, attribute } = req.body;
         console.log(req.body, 'BODY')
         for (const [key, value] of Object.entries(req.body)) {
             if (value === null) {
@@ -125,29 +124,34 @@ posesRouter
             }
         }
 
-        Promise.all(attributes.map((att, index) => {
-            PosesService.insertPoseAttribute(knexInstance, {
+        Promise.all(attribute.map((att, index) => {
+            const newAtt = {
                 assigned_flow_id,
                 author: author,
                 pose_id,
                 attribute: att
-            })
+            }
+            console.log(newAtt, 'is this existing?')
+            PosesService.insertPoseAttribute(knexInstance, newAtt)
                 .then(saved => {
                     if (!saved) {
                         return res.status(500).send({ error: { message: `Error saving ${att} at ${index} to DB` } });
                     }
-                    return saved;
+                    console.log(saved,'SAVEDSAVED!!!!!!!!!')
+                     return saved;
+                      
                 })
-        }))
-            .then(saved => {
-                res
-                    .status(201)
-                    .location(path.posix.join(req.originalUrl, `/${saved.pose_id}`))
-                    .json(saved);
-
-            })
-            .catch(next)
-
+            })) 
+                .then(saved => {
+                    console.log(saved,'SAVEDSAVEDDDDDDDDD???????')
+                    res
+                        .status(201)
+                        .location(path.posix.join(req.originalUrl,`/${saved.attribute}`))
+                        .json(saved);
+    
+                })
+                .catch(next)
+           
     })
 
 posesRouter
