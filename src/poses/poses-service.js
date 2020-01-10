@@ -42,7 +42,7 @@ const PosesService = {
                 'ps_att.pose_id',
                 'ps_att.assigned_flow_id',
                 'ps_att.author',
-                'pn.notes'
+                'pn.notes',
             )
 
             .join(

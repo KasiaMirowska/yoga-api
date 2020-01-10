@@ -67,7 +67,7 @@ posesRouter
     });
 
 posesRouter
-    .route('/api/flow/:flow_id/:pose_id')
+    .route('/api/flow/:flow_id/:pose_id')// gets full pose data
     .all(requireAuth)
     .all((req, res, next) => {
         const knexInstance = req.app.get('db');
@@ -90,7 +90,7 @@ posesRouter
 
                             attributes.forEach(att => attributesList[att.attribute] = true)
                             attributes.forEach(att => notes[att.notes] = true)
-
+                            
                             res.poseAttributes = {
                                 ...res.pose,
                                 attributesList: Object.keys(attributesList),
@@ -132,7 +132,7 @@ posesRouter
                 attribute: att
             }
             console.log(newAtt, 'is this existing?')
-            PosesService.insertPoseAttribute(knexInstance, newAtt)
+            return PosesService.insertPoseAttribute(knexInstance, newAtt)
                 .then(saved => {
                     if (!saved) {
                         return res.status(500).send({ error: { message: `Error saving ${att} at ${index} to DB` } });
@@ -146,7 +146,6 @@ posesRouter
                     console.log(saved,'SAVEDSAVEDDDDDDDDD???????')
                     res
                         .status(201)
-                        .location(path.posix.join(req.originalUrl,`/${saved.attribute}`))
                         .json(saved);
     
                 })
