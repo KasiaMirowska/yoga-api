@@ -26,10 +26,10 @@ flowsRouter
             title: req.body.title,
             author: req.user.id,
         }
-
+        
         for (const [key, value] of Object.entries(newFlow)) {
-            if (value === null) {
-                return res.status(400).send({ error: { message: `Missing ${key}` } });
+            if (value === '') {
+                return res.status(400).json({ error: { message: `Missing ${key}` } });
             }
         }
 

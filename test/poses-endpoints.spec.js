@@ -242,7 +242,7 @@ describe('Poses endpoints', function () {
         })
     })
 
-    describe.only('POST /api/flowatt/:pose_id', () => {
+    describe('POST /api/flowatt/:pose_id', () => {
         beforeEach('inserts users', () => {
             const users = testUsers.map(user => ({
                 ...user,
@@ -279,27 +279,24 @@ describe('Poses endpoints', function () {
             pose_id: testPose,
             attribute: testAttributes,
         }
-        console.log(newAttributesReq,'AAAAAAAAAA')
+        
         return supertest(app)
             .post(`/api/flowatt/${testPose}`)
             .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
             .send(newAttributesReq)
             .expect(201)
             .expect(res => {
-                console.log(res.body, "RERERERERESSSSSS")
                 expect(res.body[0].assigned_flow_id).to.eql(newAttributesReq.assigned_flow_id)
                 expect(res.body[0].author).to.eql(newAttributesReq.author)
                 expect(res.body[0].pose_id).to.eql(newAttributesReq.pose_id)
                 expect(res.body[0].attribute).to.eql(newAttributesReq.attribute[0])
             })
             .expect(res => {
-                console.log(res.body, 'THIS???????????')
                 return db
                     .from('pose_attributes')
                     .select('*')
                     .where({'pose_id': res.body[0].pose_id || 0, assigned_flow_id: res.body[0].assigned_flow_id} )
                     .then(rows => {
-                        console.log( rows, newAttributesReq, "ROWSRRRR")
                         expect(rows[0].assigned_flow_id).to.eql(newAttributesReq.assigned_flow_id)
                         expect(rows[0].author).to.eql(newAttributesReq.author)
                         expect(rows[0].pose_id).to.eql(newAttributesReq.pose_id)
