@@ -10,7 +10,7 @@ const usersRouter =require('./users/users-router');
 const authRouter = require('./auth/auth-router');
 const flowsRouter = require('./flows/flows-router');
 const morganOption = (NODE_ENV === 'production')? 'tiny' : 'common';
-const cors = require('cors');
+
 const {CLIENT_ORIGIN} = require('./config');
 
 app.use(
@@ -18,6 +18,7 @@ app.use(
         origin: CLIENT_ORIGIN
     })
 );
+
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
