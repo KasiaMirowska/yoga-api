@@ -39,7 +39,9 @@ const serializeAttPose = (pose) => {
 posesRouter
     .route('/api/poses')
     .get((req, res, next) => {
+        console.log('here?????????')
         const knexInstance = req.app.get('db')
+        console.log('HERE@@@2222222222222222222',knexInstance)
         PosesService.getAllPoses(knexInstance)
             .then(poses => {
                 res.status(200).json(poses.map(serializePose))
