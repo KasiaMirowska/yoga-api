@@ -114,6 +114,7 @@ posesRouter
     .route('/api/flowatt/:pose_id')
     .all(requireAuth)
     .post(jsonParser, (req, res, next) => {
+        console.log(req.body ,"BODY")
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attribute } = req.body;
@@ -132,14 +133,17 @@ posesRouter
             }
             return PosesService.insertPoseAttribute(knexInstance, newAtt)
                 .then(saved => {
+                    console.log(saved)
                     if (!saved) {
                         return res.status(500).send({ error: { message: `Error saving ${att} at ${index} to DB` } });
                     }
+                    console.log(saved, 'NO ERROR')
                      return saved;
                       
                 })
             })) 
                 .then(saved => {
+                    console.log(saved, 'IN LAST THEN')
                     res
                         .status(201)
                         .json(saved);
