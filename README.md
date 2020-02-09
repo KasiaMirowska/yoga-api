@@ -1,26 +1,51 @@
-# Express Boilerplate!
+# Yogi Track 
 
-This is a boilerplate project used for starting new projects!
+Check it out at [yogi-track](https://yoga-capstone.now.sh/).
 
-## Set up
+Yogi Track is a Full-Stack mobile first responsive web application for yoga teachers and enthusiasts helping a user to explore and learn avariety of poses, providing an english and sanskrit name for each pose with alphabetic sort based on either. The user can then create an account where he/she can save poses into yoga-flows as inspirations for a class or record of personal practice with notes and personal rating system.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+## WHY MAKE THIS APP?
+As a yoga teacher I find myself constatly googling the correct asana's names in sanskrit (there is way over 200 poses in yoga and to learn their complex sanskrit names takes time) and making lists of poses as part of my preperation before teaching a class. This app is meant to be a tool to help memorize sanskrit names, streamline class planning process and help teachers advance their skills.
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-## Scripts
+|<img src='https://images-for-portfolio.s3.us-east-2.amazonaws.com/yoga+cap/home.png' width ='200' > | <img src='https://images-for-portfolio.s3.us-east-2.amazonaws.com/yoga+cap/flow-pick.png' width ='200' > | <img src='https://images-for-portfolio.s3.us-east-2.amazonaws.com/yoga+cap/flow-pose.png' width='200' > | <img src='https://images-for-portfolio.s3.us-east-2.amazonaws.com/yoga+cap/pose-card2.png' width='200' > |
 
-Start the application `npm start`
+## TECH STACK
+#### FRONT-END
+* HTML5
+* CSS3
+* JavaScript
+* React.js front end framework
 
-Start nodemon for the application `npm run dev`
+#### BACK-END
+* Node.js backend run-time environment
+* Express.js backend framework and architecture
+* SQL for database
+* Postgres - relational database management system
+* JWTs for authentication
 
-Run the tests `npm test`
+#### TESTING and DEPOLYMENT
+* Mocha - back-end testing framework
+* Chai - assertion library backend testing
+* Enzyme - React.js testing utility
+* Zeit - cloud platform for static sites
+* Heroku - cloud application platform
 
-## Deploying
+## FUTURE IMPROVEMENTS
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+### UI IMPROVEMENTS
+* significatly bigger poses library
+* way to narrow poses display by anatomy, level of dificulty and saved attributes like 'energizing poses'
+* search bar for certain pose by name or anatomy
+
+### UX IMPROVEMENTS
+* drag&drop functionality to edit a flow
+* abitlity to share flows between users or to social media
+
+### OTHER FRONT-END IMPROVEMENTS
+* Google and facebook login
+* Full scale React unit testing
+
+### SERVER-SIDE IMPROVEMENTS
+* login timeout
+
