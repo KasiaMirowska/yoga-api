@@ -50,4 +50,3 @@ As a yoga teacher I find myself constatly googling the correct asana's names in 
 ### SERVER-SIDE IMPROVEMENTS
 * login timeout
 * edit/update endpoints for flows and cards
-
