@@ -7,7 +7,7 @@ const path = require('path');
 
 flowsRouter
     .route('/api/flows')
-    .all(requireAuth)
+    // .all(requireAuth)
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
         FlowsService.getAllUserFlows(knexInstance)
