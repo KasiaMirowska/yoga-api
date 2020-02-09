@@ -23,7 +23,6 @@ const FlowsService = {
         return knex
             .insert(flowsPose).into('flows_poses').returning('*')
             .then(rows => {
-                console.log(rows[0], 'MMMMMMMMMMMMMMM')
                 return rows[0]
             })
     },

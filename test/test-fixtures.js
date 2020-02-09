@@ -21,11 +21,9 @@ function seedUsers(db, users) {
         ...user,
         password: bcrypt.hashSync(user.password, 1)
     }));
-    console.log(db, 'DATABASE!!!!2222222222222')
     return db
         .into('users')
         .insert(preppedUsers)
-        // .then(() => db.raw(`SELECT setval('users_seq_id', ?)`, [users[users.length - 1].id]))// since my DB has primary key then I cant use that right?
         .then(() => {
             console.log('users populated')
         })
@@ -194,7 +192,6 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
         subject: user.username,
         algorithm: 'HS256'
     })
-    console.log('HERE?????????????1111', token)
     return `Bearer ${token}`
 }
 
@@ -205,9 +202,5 @@ module.exports = {
     makeExpectedPoseNotes,
     makeExpectedPoseAttNotes,
     cleanTables,
-    // seedUsers,
-    // seedPosesForLoggedIn,
-    // seedPosesAttributes,
-    // seedPosesNotes,
     makeAuthHeader,
 }

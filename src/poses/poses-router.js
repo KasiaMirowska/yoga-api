@@ -39,9 +39,7 @@ const serializeAttPose = (pose) => {
 posesRouter
     .route('/api/poses')
     .get((req, res, next) => {
-        console.log('here?????????')
         const knexInstance = req.app.get('db')
-        console.log('HERE@@@2222222222222222222',knexInstance)
         PosesService.getAllPoses(knexInstance)
             .then(poses => {
                 res.status(200).json(poses.map(serializePose))
@@ -119,7 +117,6 @@ posesRouter
         const knexInstance = req.app.get('db');
         const author = req.user.id;
         const { assigned_flow_id, pose_id, attribute } = req.body;
-        console.log(req.body, 'BODY')
         for (const [key, value] of Object.entries(req.body)) {
             if (value === null) {
                 return res.status(400).send({ error: { message: `Missing ${key}` } });
@@ -133,19 +130,16 @@ posesRouter
                 pose_id,
                 attribute: att
             }
-            console.log(newAtt, 'is this existing?')
             return PosesService.insertPoseAttribute(knexInstance, newAtt)
                 .then(saved => {
                     if (!saved) {
                         return res.status(500).send({ error: { message: `Error saving ${att} at ${index} to DB` } });
                     }
-                    console.log(saved,'SAVEDSAVED!!!!!!!!!')
                      return saved;
                       
                 })
             })) 
                 .then(saved => {
-                    console.log(saved,'SAVEDSAVEDDDDDDDDD???????')
                     res
                         .status(201)
                         .json(saved);
@@ -171,7 +165,6 @@ posesRouter
         }
         PosesService.insertNote(knexInstance, newNote)
             .then(note => {
-                console.log(path.posix.join(req.originalUrl, `/${note.id}`), "ORIGINAL ORIGINAL")
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${note.id}`))
