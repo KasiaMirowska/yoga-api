@@ -41,6 +41,7 @@ As a yoga teacher I find myself constatly googling the correct asana's names in 
 ### UX IMPROVEMENTS
 * drag&drop functionality to edit a flow
 * abitlity to share flows between users or to social media
+* option to see all ever saved poses with their personal attributes and comments
 
 ### OTHER FRONT-END IMPROVEMENTS
 * Google and facebook login
@@ -48,4 +49,5 @@ As a yoga teacher I find myself constatly googling the correct asana's names in 
 
 ### SERVER-SIDE IMPROVEMENTS
 * login timeout
+* edit/update endpoints for flows and cards
 
