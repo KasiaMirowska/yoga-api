@@ -13,11 +13,9 @@ const morganOption = (NODE_ENV === 'production')? 'tiny' : 'common';
 
 const {CLIENT_ORIGIN} = require('./config');
 
-
 app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
-console.log('hit')
 app.use(authRouter);
 app.use(usersRouter);
 app.use(posesRouter);

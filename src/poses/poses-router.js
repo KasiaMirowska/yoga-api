@@ -21,7 +21,6 @@ const serializePose = (pose) => {
 }
 
 const serializeAttPose = (pose) => {
-    console.log(pose, 'IN SERIAL?????????')
     return ({
         id: pose.id,
         name_eng: xss(pose.name_eng),
@@ -86,7 +85,7 @@ posesRouter
                 PosesService.getPoseAttNotesById(knexInstance, poseId, flowId)
                     .then(attributes => {
                         if (!attributes[0]) {
-                            res.status(200).json(serializeAttPose(res.pose));
+                            return res.status(200).json(serializePose(res.pose));
                         } else {
                             let attributesList = {};
                             let notes = {};
