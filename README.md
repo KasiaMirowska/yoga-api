@@ -16,6 +16,7 @@ As a yoga teacher I find myself constatly googling the correct asana's names in 
 * CSS3
 * JavaScript
 * React.js front end framework
+* font-awesome
 
 #### BACK-END
 * Node.js backend run-time environment
