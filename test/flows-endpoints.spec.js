@@ -4,8 +4,6 @@ const helpers = require('./test-data-helpers');
 const fixtures = require('./test-fixtures');
 const bcrypt = require('bcryptjs');
 
-
-
 describe('Flows endpoints', function () {
     let db;
     const { testPoses, testUsers, testFlows, testSectionFlows, testFlowsPoses, testNotes, testPoseAttributes } = helpers.makeTestFixtures();
@@ -14,9 +12,9 @@ describe('Flows endpoints', function () {
         db = knex({
             client: 'pg',
             connection: process.env.TEST_DATABASE_URL,
-        })
-        app.set('db', db)
-    })
+        });
+        app.set('db', db);
+    });
     after('disconnect from db', () => db.destroy());
     beforeEach('cleanup', () => fixtures.cleanTables(db));
     afterEach('cleanup', () => fixtures.cleanTables(db));
@@ -27,55 +25,59 @@ describe('Flows endpoints', function () {
                 const users = testUsers.map(user => ({
                     ...user,
                     password: bcrypt.hashSync(user.password, 1)
-                }))
+                }));
                 return db
                     .into('users')
-                    .insert(users)
-            })
+                    .insert(users);
+            });
 
             it('returns 200 and empty array', () => {
                 return supertest(app)
                     .get('/api/flows')
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                    .expect(200, [])
-            })
-        })
+                    .expect(200, []);
+            });
+        });
+
         context('given flows in db', () => {
             beforeEach('insert flows', () => {
                 const users = testUsers.map(user => ({
                     ...user,
                     password: bcrypt.hashSync(user.password, 1)
-                }))
+                }));
                 return db
                     .into('users')
                     .insert(users)
                     .then(() => {
                         return db
                             .into('flows')
-                            .insert(testFlows)
-                    })
-            })
+                            .insert(testFlows);
+                    });
+            });
+
             it('returns 200 and all flows', () => {
                 const expectedFlows = testFlows;
                 return supertest(app)
                     .get('/api/flows')
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                    .expect(200, expectedFlows)
-            })
-        })
-    })
+                    .expect(200, expectedFlows);
+            });
+        });
+    });
+
     describe('POST /api/flows', () => {
         beforeEach('insert users', () => {
             const users = testUsers.map(user => ({
                 ...user,
                 password: bcrypt.hashSync(user.password, 1)
-            }))
+            }));
             return db
                 .into('users')
-                .insert(users)
-        })
+                .insert(users);
+        });
+
         it('creates a new flow', () => {
-            const title = 'new flow'
+            const title = 'new flow';
             const author = testUsers[1].id;
             const newFlow = {
                 title,
@@ -86,7 +88,8 @@ describe('Flows endpoints', function () {
                 peakPose: [],
                 breakPoses: [],
                 afterPeak: [],
-            }
+            };
+
             return supertest(app)
                 .post('/api/flows')
                 .set('Authorization', fixtures.makeAuthHeader(testUsers[1]))
@@ -107,17 +110,17 @@ describe('Flows endpoints', function () {
                         .then(row => {
                             expect(row.title).to.eql(newFlow.title);
                             expect(row.author).to.eql(newFlow.author);
-                        })
+                        });
+                });
+        });
+    });
 
-                })
-        })
-    })
     describe('POST /api/flow-pose', () => {
         beforeEach('insert users', () => {
             const users = testUsers.map(user => ({
                 ...user,
                 password: bcrypt.hashSync(user.password, 1)
-            }))
+            }));
             return db
                 .into('users')
                 .insert(users)
@@ -132,18 +135,20 @@ describe('Flows endpoints', function () {
                                 .then(() => {
                                     return db
                                         .into('section_flows')
-                                        .insert(testSectionFlows)
-                                })
-                        })
-                })
-        })
+                                        .insert(testSectionFlows);
+                                });
+                        });
+                });
+        });
+
         it('returns 201 and creates new flow-pose', () => {
             const newFlowPose = {
                 main_flow_id: testFlows[2].id,
                 author: testUsers[1].id,
                 pose_id: testPoses[3].id,
                 section_flow_id: testSectionFlows[1].id,
-            }
+            };
+
             return supertest(app)
                 .post('/api/flow-pose')
                 .set('Authorization', fixtures.makeAuthHeader(testUsers[1]))
@@ -165,37 +170,40 @@ describe('Flows endpoints', function () {
                             expect(rows[0].author).to.eql(newFlowPose.author);
                             expect(rows[0].pose_id).to.eql(newFlowPose.pose_id);
                             expect(rows[0].section_flow_id).to.eql(newFlowPose.section_flow_id);
-                        })
-                })
-        })
-    })
+                        });
+                });
+        });
+    });
+
     describe('/api/flows/flow_id', () => {
         beforeEach('insert users to enable authentication', () => {
             const users = testUsers.map(user => ({
                 ...user,
                 password: bcrypt.hashSync(user.password, 1)
-            }))
+            }));
             return db
                 .into('users')
-                .insert(users)
-        })
+                .insert(users);
+        });
+
         context('given no flows in db', () => {
             it('returns 400 ', () => {
                 const flowId = 1234;
                 return supertest(app)
                     .get(`/api/flows/${flowId}`)
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                    .expect(400, { error: { message: `Flow with id ${flowId} doesn't exist` } })
-            })
-        })
+                    .expect(400, { error: { message: `Flow with id ${flowId} doesn't exist` } });
+            });
+        });
+
         context('Given no poses in the flow', () => {
             beforeEach('insert data', () => {
                 return db
                     .into('flows')
-                    .insert(testFlows)
-            })
+                    .insert(testFlows);
+            });
+        });
 
-        })
         it('returns 200 and an empty flow', () => {
             it('returns 200 and an empty flow', () => {
                 const flowId = testFlows[2].id;
@@ -203,13 +211,14 @@ describe('Flows endpoints', function () {
                     id: testFlows[2].id,
                     author: testUsers[0].id,
                     title: 'flow3'
-                }
+                };
+
                 return supertest(app)
                     .get(`/api/flows/${flowId}`)
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                    .expect(200, expectedFlow)
-            })
-        })
+                    .expect(200, expectedFlow);
+            });
+        });
 
         context('Given poses in the flow', () => {
             beforeEach('insert data', () => {
@@ -227,35 +236,37 @@ describe('Flows endpoints', function () {
                                     .then(() => {
                                         return db
                                             .into('flows_poses')
-                                            .insert(testFlowsPoses)
-                                    })
-                            })
-                    })
-            })
+                                            .insert(testFlowsPoses);
+                                    });
+                            });
+                    });
+            });
+
             it('returns flow with all its poses', () => {
                 const flowId = testFlows[0].id;
-                const author = testUsers[0].id
+                const author = testUsers[0].id;
                 const expectedFlow = {
                     id: testFlows[0].id,
                     title: testFlows[0].title,
                     author: author,
                     assignedPoses: [[1, 2], [1], [], [], []]
-                }
+                };
 
                 return supertest(app)
                     .get(`/api/flows/${flowId}`)
                     .set('Authorization', fixtures.makeAuthHeader(testUsers[1]))
-                    .expect(200, expectedFlow)
+                    .expect(200, expectedFlow);
+            });
+        });
+    });
 
-            })
-        })
-    })
     describe('DELETE /api/delete/flow_id/pose_id', () => {
         beforeEach('insert users for authentication', () => {
             const users = testUsers.map(user => ({
                 ...user,
                 password: bcrypt.hashSync(user.password, 1)
-            }))
+            }));
+
             return db
                 .into('users')
                 .insert(users)
@@ -274,12 +285,13 @@ describe('Flows endpoints', function () {
                                         .then(() => {
                                             return db
                                                 .into('flows_poses')
-                                                .insert(testFlowsPoses)
-                                        })
-                                })
-                        })
-                })
-        })
+                                                .insert(testFlowsPoses);
+                                        });
+                                });
+                        });
+                });
+        });
+
         it('deletes selected pose from a flow', () => {
             const flowId = testFlows[0].id;
             const poseToRemove = 2;
@@ -298,9 +310,8 @@ describe('Flows endpoints', function () {
                     return supertest(app)
                         .get(`/api/flows/${flowId}`)
                         .set('Authorization', fixtures.makeAuthHeader(testUsers[0]))
-                        .expect(200, expectedFlow )
-                })
-        })
-
-    })
-})
+                        .expect(200, expectedFlow );
+                });
+        });
+    });
+});

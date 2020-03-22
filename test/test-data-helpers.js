@@ -44,8 +44,7 @@ function makePosesArray() {
             img: 'image4',
             video: 'video4',
         }
-
-    ]
+    ];
 }
 
 function makeUsersArray() {
@@ -68,7 +67,7 @@ function makeUsersArray() {
             username: 'userName3',
             password: '!1233Aabcd',
         },
-    ]
+    ];
 }
 
 function makeFlowsArray() {
@@ -89,8 +88,7 @@ function makeFlowsArray() {
             title: 'flow3',
             author: 1,
         }
-    ]
-
+    ];
 }
 
 function makeSectionFlowsArray() {
@@ -118,7 +116,7 @@ function makeSectionFlowsArray() {
             id: 5,
             section: 'afterBreak',
         }
-    ]
+    ];
 }
 
 function makeFlowsPosesArray(flows, users, poses, sectionFlows) {
@@ -147,7 +145,7 @@ function makeFlowsPosesArray(flows, users, poses, sectionFlows) {
             pose_id: 1,
             section_flow_id: 2,
         }
-    ]
+    ];
 }
 
 function makeNotesArray(flows, poses, users) {
@@ -180,7 +178,7 @@ function makeNotesArray(flows, poses, users) {
             author: 1,
             notes: 'this is test note4'
         }
-    ]
+    ];
 }
 
 function makePoseAttributesArray(users, flows, poses) {
@@ -209,7 +207,7 @@ function makePoseAttributesArray(users, flows, poses) {
             pose_id: 2,
             attribute: 'some attribute2 for pose2'
         }
-    ]
+    ];
 }
 
 function makeTestFixtures() {
@@ -220,7 +218,7 @@ function makeTestFixtures() {
     const testFlowsPoses = makeFlowsPosesArray(testFlows, testUsers, testPoses, testSectionFlows);
     const testNotes = makeNotesArray(testFlows, testPoses, testUsers);
     const testPoseAttributes = makePoseAttributesArray();
-    return { testPoses, testUsers, testFlows, testSectionFlows, testFlowsPoses, testNotes, testPoseAttributes }
+    return { testPoses, testUsers, testFlows, testSectionFlows, testFlowsPoses, testNotes, testPoseAttributes };
 }
 
 function makeMaliciousPose() {
@@ -234,7 +232,7 @@ function makeMaliciousPose() {
         pose_type: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">',
         img: '<img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">',
         video: 'video1',
-    }
+    };
 
     const expectedPose = {
         name_eng: '&lt;script&gt;alert("xss");&lt;/script&gt;',
@@ -245,11 +243,12 @@ function makeMaliciousPose() {
         pose_type: '<img src="https://url.to.file.which/does-not.exist">',
         img: '<img src="https://url.to.file.which/does-not.exist">',
         video: 'video1',
-    }
+    };
+
     return {
         maliciousPose,
         expectedPose,
-    }
+    };
 }
 
 module.exports = {
@@ -263,4 +262,4 @@ module.exports = {
     makeTestFixtures,
     makeMaliciousPose,
     makeTestFixtures,
-}
+};
