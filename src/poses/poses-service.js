@@ -11,6 +11,7 @@ const PosesService = {
                 'ps.img'
             );
     },
+
     getPoseById: (knex, poseId) => {
         return knex
             .from('yoga_poses AS ps')
@@ -29,9 +30,7 @@ const PosesService = {
                 'ps.id',
                 poseId
             )
-            .first()
-
-
+            .first();
     },
 
     getPoseAttNotesById: (knex, poseId, flowId) => {
@@ -44,7 +43,6 @@ const PosesService = {
                 'ps_att.author',
                 'pn.notes',
             )
-
             .join(
                 'pose_notes AS pn',
                 'ps_att.pose_id',
@@ -55,8 +53,7 @@ const PosesService = {
                     'ps_att.assigned_flow_id': flowId,
                     'ps_att.pose_id': poseId,
                 }
-            )
-
+            );
     },
 
     insertPoseAttribute: (knex, newAttribute) => {
@@ -65,8 +62,8 @@ const PosesService = {
             .into('pose_attributes')
             .returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
 
     insertNote: (knex, newNote) => {
@@ -75,29 +72,9 @@ const PosesService = {
             .into('pose_notes')
             .returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
-
-    // getAttributeIdsByPoseId: (knex, poseId) => {
-    //     return knex
-    //         .from('pose_attributes AS ps_at')
-    //         .select(
-    //             'ps_at.pose_id',
-    //             'attribute',
-    //             'ps_att.assigned_flow_id'
-    //         )
-    //         .join(
-    //             'yoga_poses AS ps',
-    //             'ps.id',
-    //             'ps_att.pose_id'
-    //         )
-    //         .where(
-    //             'ps_at.pose_id',
-    //             poseId
-    //         )
-    // }
-
-}
+};
 
 module.exports = PosesService;

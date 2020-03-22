@@ -9,29 +9,28 @@ authRouter
         const loginUser = { userName, password }; 
         for (const [key, value] of Object.entries(loginUser)) {
             if (value == null) {
-                return res.status(400).json({ error: { message: `Missing ${key}` } })
+                return res.status(400).json({ error: { message: `Missing ${key}` } });
             }
         }
-        const knexInstance = req.app.get('db')
+        const knexInstance = req.app.get('db');
         
         AuthService.getUserWithUserName(knexInstance, loginUser.userName)
-
             .then(dbUser => {
                 if (!dbUser) {
-                    return res.status(400).send({ error: { message: 'Incorrect user_name or password' } })
+                    return res.status(400).send({ error: { message: 'Incorrect user_name or password' } });
                 }
                 return AuthService.comparePasswords(loginUser.password, dbUser.password)
-              
                     .then(compareMatch => {
                         if (!compareMatch) {
-                            return res.status(400).json({ error: { message: 'Incorrect user_name or password' } })
+                            return res.status(400).json({ error: { message: 'Incorrect user_name or password' } });
                         }
                         const subject = dbUser.username;
-                        const payload = { user_id: dbUser.id}
+                        const payload = { user_id: dbUser.id};
                         
-                        return res.json({authToken: AuthService.createJwt(subject, payload)})
-                    })
+                        return res.json({authToken: AuthService.createJwt(subject, payload)});
+                    });
             })
-            .catch(next)
-    })
+            .catch(next);
+    });
+    
     module.exports = authRouter;

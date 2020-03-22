@@ -10,21 +10,21 @@ const FlowsService = {
                 'users AS usr',
                 'fl.author',
                 'usr.id'
-            )
-         
+            );
     },
+
     postNewFlow : (db, newFlow) => {
         return db
             .insert(newFlow).into('flows').returning('*')
-            .then(rows => rows[0])
+            .then(rows => rows[0]);
     },
 
     insertPoseIntoFlows: (knex, flowsPose) => {
         return knex
             .insert(flowsPose).into('flows_poses').returning('*')
             .then(rows => {
-                return rows[0]
-            })
+                return rows[0];
+            });
     },
 
     getAllPosesInFlow: (knex, flowId) => {
@@ -51,14 +51,12 @@ const FlowsService = {
             .where(
                 'fl.id',
                 flowId
-            )
-            
-
+            );
     },
 
     deletePoseFromFlow: (knex, poseId,flowId) => {
         return knex.from('flows_poses').select('*').where({pose_id: poseId, main_flow_id: flowId}).delete();
     }
+};
 
-}
 module.exports = FlowsService;

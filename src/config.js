@@ -4,4 +4,4 @@ module.exports = {
     DATABASE_URL: process.env.DATABASE_URL || 'postgresql://kamirska@localhost/yoga-app',
     JWT_SECRET: process.env.JWT_SECRET || 'yoga-nowysekret',
     CLIENT_ORIGIN: 'https://yoga-capstone.now.sh/'
-}
+};
