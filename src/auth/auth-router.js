@@ -17,12 +17,12 @@ authRouter
         AuthService.getUserWithUserName(knexInstance, loginUser.userName)
             .then(dbUser => {
                 if (!dbUser) {
-                    return res.status(400).send({ error: { message: 'Incorrect user_name or password' } });
+                    return res.status(400).send({ error: { message: 'Incorrect username or password' } });
                 }
                 return AuthService.comparePasswords(loginUser.password, dbUser.password)
                     .then(compareMatch => {
                         if (!compareMatch) {
-                            return res.status(400).json({ error: { message: 'Incorrect user_name or password' } });
+                            return res.status(400).json({ error: { message: 'Incorrect username or password' } });
                         }
                         const subject = dbUser.username;
                         const payload = { user_id: dbUser.id};
@@ -32,5 +32,5 @@ authRouter
             })
             .catch(next);
     });
-    
+
     module.exports = authRouter;
