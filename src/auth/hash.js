@@ -3,6 +3,5 @@ const text = 'password';
 
 
 bcrypt.hash(text, 10).then(hash => {
-    console.log(hash)
-})
-
+    console.log(hash);
+});

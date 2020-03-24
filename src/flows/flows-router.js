@@ -12,10 +12,10 @@ flowsRouter
         const knexInstance = req.app.get('db')
         FlowsService.getAllUserFlows(knexInstance)
             .then(flows => {
-                res.json(flows)
+                res.json(flows);
             })
-            .catch(next)
-    })
+            .catch(next);
+    });
 
 flowsRouter
     .route('/api/flows/')
@@ -25,7 +25,7 @@ flowsRouter
         const newFlow = {
             title: req.body.title,
             author: req.user.id,
-        }
+        };
         
         for (const [key, value] of Object.entries(newFlow)) {
             if (value === '') {
@@ -45,16 +45,16 @@ flowsRouter
                     peakPose: [],
                     breakPoses: [],
                     afterPeak: [],
-                }
+                };
 
                 flow = currentFlow;
                
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${flow.id}`))
-                    .json(flow)
-            }).catch(next)
-    })
+                    .json(flow);
+            }).catch(next);
+    });
 
 flowsRouter
     .route('/api/flow-pose')
@@ -62,14 +62,14 @@ flowsRouter
     .post(jsonParser, (req, res, next) => {
         
         const knexInstance = req.app.get('db');
-        const { main_flow_id, pose_id, section_flow_id } = req.body
+        const { main_flow_id, pose_id, section_flow_id } = req.body;
         
         const newFlowsPose = {
             main_flow_id,
             author: req.user.id,
             pose_id,
             section_flow_id
-        }
+        };
         
         for (const [key, value] of Object.entries(newFlowsPose)) {
             if (value === null) {
@@ -79,16 +79,12 @@ flowsRouter
 
         FlowsService.insertPoseIntoFlows(knexInstance, newFlowsPose)
             .then(flowsPose => {
-
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${flowsPose.main_flow_id}`))
-                    .json(flowsPose)
-            }).catch(next)
-    })
-
-
-
+                    .json(flowsPose);
+            }).catch(next);
+    });
 
 flowsRouter
     .route('/api/flows/:flow_id')
@@ -99,7 +95,7 @@ flowsRouter
         FlowsService.getAllPosesInFlow(knexInstance, flowId)
             .then(flow => {
                 if (!flow[0]) {
-                    return res.status(400).send({ error: { message: `Flow with id ${flowId} doesn't exist` } })
+                    return res.status(400).send({ error: { message: `Flow with id ${flowId} doesn't exist` } });
                 }
                
                 const currentFlow = {
@@ -113,9 +109,10 @@ flowsRouter
                     breakPoses: [],
                     afterPeak: [],
                 };
+
                 flow.map(flow => {
                     
-                    if(flow.pose_id === null){
+                    if (flow.pose_id === null) {
                         return currentFlow;
                     }
                     currentFlow[flow.section].push(flow.pose_id);
@@ -126,14 +123,15 @@ flowsRouter
                     title: currentFlow.title,
                     author: currentFlow.author,
                     assignedPoses: [currentFlow.warmUp, currentFlow.midFlow, currentFlow.peakPose, currentFlow.breakPoses, currentFlow.afterPeak],
-                }
+                };
+
                 next();
             })
-            .catch(next)
+            .catch(next);
     })
     .get((req, res, next) => {
-        res.status(200).json(res.flow)
-    })
+        res.status(200).json(res.flow);
+    });
 
 flowsRouter
 .route('/api/delete/:flow_id/:pose_id')
@@ -144,11 +142,9 @@ flowsRouter
     const flowToTarget = req.params.flow_id;
     FlowsService.deletePoseFromFlow(knexInstance, poseToRemove, flowToTarget)
         .then(() => {
-            res.status(204).send('pose deleted from flow')
+            res.status(204).send('pose deleted from flow');
         })
-        .catch(next)
-})
-
-
+        .catch(next);
+});
 
 module.exports = flowsRouter;

@@ -15,22 +15,12 @@ const STORE = {
             id: 2,
             name: 'sasia',
             savedPosesIds: [2, 5, 7, 8, 3, 12, 14],
-            /* savedPoses: [
-            {
-                poseId: 2,
-                attributes: [1,3,4],
-                notes: 'i like this thing'
-            }
-            ]
-            */
             peakPose: '',
             warmUp: [2, 5],
             midFlow: [],
             breakPoses: [],
             afterPeak: [5, 6, 7, 2],
-
         }
-
     ],
 
     attributes: [
@@ -295,9 +285,6 @@ const STORE = {
             poseType: 'Backbend, core',
         },
     ]
-
 }
-
-
 
 export default STORE;

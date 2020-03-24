@@ -13,7 +13,7 @@ function cleanTables(db) {
             pose_notes,
             pose_attributes
             RESTART IDENTITY CASCADE`
-    )
+    );
 }
 
 function seedUsers(db, users) {
@@ -25,9 +25,10 @@ function seedUsers(db, users) {
         .into('users')
         .insert(preppedUsers)
         .then(() => {
-            console.log('users populated')
-        })
+            console.log('users populated');
+        });
 }
+
 function seedPosesForLoggedIn(db, users, poses) {
     const protectedUsers = seedUsers(users);
     return db
@@ -36,19 +37,18 @@ function seedPosesForLoggedIn(db, users, poses) {
         .then(() =>
             db
                 .into('yoga_poses')
-                .insert(poses)
-        )
-        .then(() => {
-            console.log('poses for loggedin user populated')
-        })
+                .insert(poses))
+                .then(() => {
+                    console.log('poses for loggedin user populated');
+                });
 }
-function seedPosesAttributes(db, users, poses, attributes) {
 
+function seedPosesAttributes(db, users, poses, attributes) {
     const protectedUsers = seedUsers(users);
     return db
         .into('users')
         .insert(protectedUsers)
-        .then(() =>
+        .then(() => {
             db
                 .into('yoga_poses')
                 .insert(poses)
@@ -57,10 +57,10 @@ function seedPosesAttributes(db, users, poses, attributes) {
                         .into('pose_attributes')
                         .insert(attributes)
                         .then(() => {
-                            console.log('attributes populated')
-                        })
-                })
-        )
+                            console.log('attributes populated');
+                        });
+                });
+        });
 }
 
 function seedPosesNotes(db, users, poses, notes) {
@@ -68,7 +68,7 @@ function seedPosesNotes(db, users, poses, notes) {
     return db
         .into('users')
         .insert(protectedUsers)
-        .then(() =>
+        .then(() => {
             db
                 .into('yoga_poses')
                 .insert(poses)
@@ -77,10 +77,10 @@ function seedPosesNotes(db, users, poses, notes) {
                         .into('pose_notes')
                         .insert(notes)
                         .then(() => {
-                            console.log('notes populated')
-                        })
-                })
-        )
+                            console.log('notes populated');
+                        });
+                });
+        });
 }
 
 function seedPosesAttNotes(db, users, poses, attributes, notes) {
@@ -88,7 +88,7 @@ function seedPosesAttNotes(db, users, poses, attributes, notes) {
     return db
         .into('users')
         .insert(protectedUsers)
-        .then(() =>
+        .then(() => {
             db
                 .into('yoga_poses')
                 .insert(poses)
@@ -101,12 +101,11 @@ function seedPosesAttNotes(db, users, poses, attributes, notes) {
                                 .into('pose_notes')
                                 .insert(notes)
                                 .then(() => {
-                                    console.log('pose attNotes populated')
-                                })
-                        })
-                })
-        )
-
+                                    console.log('pose attNotes populated');
+                                });
+                        });
+                });
+        });
 }
 
 
@@ -120,8 +119,9 @@ function makeExpectedListPose(pose) {
         pose_type: pose.pose_type,
         pose_level: pose.pose_level,
         img: pose.img
-    })
+    });
 }
+
 function makeExpectedFullPose(pose) {
     return ({
         id: pose.id,
@@ -133,15 +133,15 @@ function makeExpectedFullPose(pose) {
         pose_level: pose.pose_level,
         img: pose.img,
         video: pose.video,
-    })
+    });
 }
 
 function makeExpectedPoseAttributes(user, pose, flowId, attributes) {
-    const poseAttributes = attributes.filter(att => att.author === user.id)
+    const poseAttributes = attributes.filter(att => att.author === user.id);
     const newerPoseAttributes = poseAttributes.filter(att => att.assigned_flow_id === flowId);
-    const newestPoseAttributes = newerPoseAttributes.filter(att => att.pose_id === pose.id)
+    const newestPoseAttributes = newerPoseAttributes.filter(att => att.pose_id === pose.id);
     let attributesList = {};
-    newestPoseAttributes.forEach(att => attributesList[att.attribute] = true)
+    newestPoseAttributes.forEach(att => attributesList[att.attribute] = true);
     return ({
         id: pose.id,
         name_eng: pose.name_eng,
@@ -153,15 +153,15 @@ function makeExpectedPoseAttributes(user, pose, flowId, attributes) {
         img: pose.img,
         video: pose.video,
         attributesList: Object.keys(attributesList),
-    })
+    });
 }
 
 function makeExpectedPoseNotes(user, pose, flowId, notes) {
-    const poseNotes = notes.filter(n => n.author === user.id)
+    const poseNotes = notes.filter(n => n.author === user.id);
     const newerPoseNotes = poseNotes.filter(n => n.assigned_flow_id === flowId);
-    const newestPoseNotes = newerPoseNotes.filter(n => n.pose_id === pose.id)
+    const newestPoseNotes = newerPoseNotes.filter(n => n.pose_id === pose.id);
     let notesList = {};
-    newestPoseNotes.forEach(n => notesList[n.notes] = true)
+    newestPoseNotes.forEach(n => notesList[n.notes] = true);
 
     return ({
         id: pose.id,
@@ -174,16 +174,16 @@ function makeExpectedPoseNotes(user, pose, flowId, notes) {
         img: pose.img,
         video: pose.video,
         notes: Object.keys(notesList)
-    })
+    });
 }
 
 function makeExpectedPoseAttNotes(user, pose, flowId, attributes, notes) {
-    const poseAtt = makeExpectedPoseAttributes(user, pose, flowId, attributes)
-    const poseNote = makeExpectedPoseNotes(user, pose, flowId, notes)
+    const poseAtt = makeExpectedPoseAttributes(user, pose, flowId, attributes);
+    const poseNote = makeExpectedPoseNotes(user, pose, flowId, notes);
     return ({
         ...poseAtt,
         notes: poseNote.notes,
-    })
+    });
 }
 
 
@@ -191,8 +191,8 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
     const token = jwt.sign({ user_id: user.id }, secret, {
         subject: user.username,
         algorithm: 'HS256'
-    })
-    return `Bearer ${token}`
+    });
+    return `Bearer ${token}`;
 }
 
 module.exports = {
@@ -203,4 +203,4 @@ module.exports = {
     makeExpectedPoseAttNotes,
     cleanTables,
     makeAuthHeader,
-}
+};
